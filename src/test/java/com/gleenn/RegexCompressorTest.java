@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 public class RegexCompressorTest {
     @Test
     public void compressTest() {
+        assertThat(compress(asList("a", "b")), is("a|b"));
+        assertThat(compress(asList("a")), is("a"));
         assertThat(compress(asList("abcd", "a")), is("a(?:bcd)?"));
         assertThat(compress(asList("a", "b", "ab")), is("ab?|b"));
     }

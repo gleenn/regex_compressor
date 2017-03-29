@@ -17,7 +17,6 @@ public class RegexCompressor {
     public static void buildRegex(Trie trie, StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
         Character character = trie.getCharacter();
-        System.out.println("My name is " + character + " and I am " + (trie.isTerminal() ? "" : "not") + " terminal");
         if(character != null) {
             result.append(character);
         }
@@ -28,18 +27,18 @@ public class RegexCompressor {
             return;
         }
 
-        if(!trie.isTerminal() || childrenTries.size() > 1) {
-            for(Trie child : childrenTries.values()) {
-                buildRegex(child, result);
-            }
-        } else {
-            result.append("(?:");
+        if(trie.isTerminal() || childrenTries.size() > 1) {
+            if(character != null) result.append("(?:");
             for(Trie child : childrenTries.values()) {
                 buildRegex(child, result);
                 result.append("|");
             }
-            result.deleteCharAt(result.length()-1); // remove extra "|"
-            result.append(")");
+            result.deleteCharAt(result.length() - 1); // remove extra "|"
+            if(character != null) result.append(")");
+        } else {
+            for(Trie child : childrenTries.values()) {
+                buildRegex(child, result);
+            }
         }
         if(trie.isTerminal()) {
             result.append("?");
