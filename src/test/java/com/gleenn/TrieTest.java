@@ -20,4 +20,16 @@ public class TrieTest {
         Trie trieB = trieA.getChildren().get('b');
         assertThat(trieB.isTerminal(), is(false));
     }
+
+    @Test
+    public void equalsTest() {
+        assertThat(new Trie().equals(new Trie()), is(true));
+        assertThat(new Trie().addWord("a").equals(new Trie().addWord("a")), is(true));
+
+        Trie aFirst = new Trie();
+        aFirst.addWord("a").addWord("b");
+        Trie bFirst = new Trie();
+        bFirst.addWord("b").addWord("a");
+        assertThat(aFirst.equals(bFirst), is(false));
+    }
 }
