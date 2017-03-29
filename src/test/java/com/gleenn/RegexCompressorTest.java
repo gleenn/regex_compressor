@@ -11,16 +11,13 @@ import org.junit.jupiter.api.Test;
 public class RegexCompressorTest {
     @Test
     public void compressTest() {
+        assertThat(compress(asList("abcd", "a")), is("a(?:bcd)?"));
         assertThat(compress(asList("a", "b", "ab")), is("ab?|b"));
     }
 
     @Test
     void buildRegexTest() {
         StringBuilder result;
-
-        result = new StringBuilder();
-        buildRegex(null, result);
-        assertThat(result.toString(), is(""));
 
         result = new StringBuilder();
         buildRegex(new Trie(null, true), result);

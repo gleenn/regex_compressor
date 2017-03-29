@@ -15,10 +15,13 @@ public class RegexCompressor {
     }
 
     public static void buildRegex(Trie trie, StringBuilder result) {
+        buildRegex(trie, false, result);
+    }
+
+    public static void buildRegex(Trie trie, boolean inGroup, StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
         Character character = trie.getCharacter();
-        boolean characterIsNull = character != null;
-        if(characterIsNull) {
+        if(character != null) {
             result.append(character);
         }
 
@@ -30,22 +33,17 @@ public class RegexCompressor {
 
         if(childrenTries.size() == 1) {
             for(Trie child : childrenTries.values()) {
-                buildRegex(child, result);
+                buildRegex(child, false, result);
             }
         } else {
-            if(characterIsNull) {
-                result.append("(?:");
-            }
+            result.append("(?:");
             for(Trie child : childrenTries.values()) {
-                buildRegex(child, result);
+                buildRegex(child, inGroup, result);
                 result.append("|");
             }
             result.deleteCharAt(result.length()-1); // remove extra "|"
-            if(characterIsNull) {
-                result.append(")");
-            }
+            result.append(")");
         }
-
         if(!trie.isTerminal()) {
             result.append("?");
         }
