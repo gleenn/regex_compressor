@@ -63,6 +63,7 @@ public class Trie {
             parent.children.put(c, node);
         } else if (wordLength == 1) {
             node.terminal = true;
+            return node;
         }
         return addWord(node, word.substring(1));
     }

@@ -11,7 +11,13 @@ public class TrieTest {
         Trie root = new Trie();
         assertThat(root.isTerminal(), is(false));
 
-        Trie child = root.addWord("a");
-        assertThat(child.isTerminal(), is(true));
+        Trie trieA = root.addWord("a");
+        assertThat(trieA.isTerminal(), is(true));
+
+        Trie trieC = root.addWord("abc");
+        assertThat(trieC.isTerminal(), is(true));
+
+        Trie trieB = trieA.getChildren().get('b');
+        assertThat(trieB.isTerminal(), is(false));
     }
 }
