@@ -5,42 +5,51 @@ import java.util.List;
 
 public class RegexCompressor {
     public static String compress(List<String> strings) {
-        return compress(strings, false);
-    }
-
-    public static String compress(List<String> strings, boolean allowEmpty) {
         Trie trie = new Trie();
         for(String string : strings) {
             trie.addWord(string);
         }
         StringBuilder result = new StringBuilder();
-        buildRegex(trie, allowEmpty, result);
+        buildRegex(trie, true, result);
         return result.toString();
     }
 
-    public static void buildRegex(Trie trie, boolean optional, StringBuilder result) {
-        if(trie == null) return;
-        Character character = trie.getCharacter();
-        if(character == null) return;
+    public static void buildRegex(Trie trie, StringBuilder result) {
+        buildRegex(trie, false, result);
+    }
 
-        result.append(character);
+    public static void buildRegex(Trie trie, boolean skipParens, StringBuilder result) {
+        if(trie == null) throw new RuntimeException("Trie cannot be null");
+        Character character = trie.getCharacter();
+        if(character != null) {
+            result.append(character);
+        }
+
         LinkedHashMap<Character, Trie> childrenTries = trie.getChildren();
 
-        if(childrenTries.isEmpty()) return;
+        if(childrenTries.isEmpty()) {
+            return;
+        }
 
         if(childrenTries.size() == 1) {
             for(Trie child : childrenTries.values()) {
-                buildRegex(child, optional, result);
+                buildRegex(child, result);
             }
         } else {
-            result.append("(?:");
-            for(Trie child : childrenTries.values()) {
-                buildRegex(child, optional, result);
+            if(!skipParens) {
+                result.append("(?:");
             }
-            result.append(")");
+            for(Trie child : childrenTries.values()) {
+                buildRegex(child, result);
+                result.append("|");
+            }
+            result.deleteCharAt(result.length()-1); // remove extra "|"
+            if(!skipParens) {
+                result.append(")");
+            }
         }
 
-        if(optional) {
+        if(!trie.isTerminal()) {
             result.append("?");
         }
     }

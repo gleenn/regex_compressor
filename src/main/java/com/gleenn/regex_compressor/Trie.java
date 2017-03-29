@@ -1,12 +1,7 @@
 package com.gleenn.regex_compressor;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Trie {
     final Character character;
@@ -21,10 +16,6 @@ public class Trie {
         return children;
     }
 
-    public boolean hasNoChildren() {
-        return children.isEmpty();
-    }
-
     public boolean isTerminal() {
         return terminal;
     }
@@ -34,7 +25,7 @@ public class Trie {
     }
 
     public Trie(Character character, boolean terminal) {
-        this(character, terminal, null);
+        this(character, terminal, new LinkedHashMap<Character, Trie>());
     }
 
     public Trie(Character character, boolean terminal, List<Character> childrenCharacters) {
@@ -46,6 +37,15 @@ public class Trie {
         for (Character child : childrenCharacters) {
             this.children.put(child, new Trie(child, true));
         }
+    }
+
+    public Trie(Character character, boolean terminal, LinkedHashMap<Character, Trie> children) {
+        if(children == null) {
+            throw new RuntimeException("Children cannot be null");
+        }
+        this.character = character;
+        this.terminal = terminal;
+        this.children = children;
     }
 
     public Trie addWord(String word) {
@@ -63,6 +63,7 @@ public class Trie {
             parent.children.put(c, node);
         } else if (wordLength == 1) {
             node.terminal = true;
+//            return node;
         }
         return addWord(node, word.substring(1));
     }
