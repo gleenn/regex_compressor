@@ -11,14 +11,14 @@ import java.util.Map;
 public class Trie {
     final Character character;
     boolean terminal;
-    final Map<Character, Trie> children;
+    final LinkedHashMap<Character, Trie> children;
 
     public Character getCharacter() {
         return character;
     }
 
-    public Collection<Trie> getChildren() {
-        return children.values();
+    public LinkedHashMap<Character, Trie> getChildren() {
+        return children;
     }
 
     public boolean hasNoChildren() {
@@ -34,15 +34,17 @@ public class Trie {
     }
 
     public Trie(Character character, boolean terminal) {
-        this(character, terminal, Collections.<Character>emptyList());
+        this(character, terminal, null);
     }
 
-    public Trie(Character character, boolean terminal, List<Character> children) {
+    public Trie(Character character, boolean terminal, List<Character> childrenCharacters) {
         this.character = character;
         this.terminal = terminal;
-        this.children = new LinkedHashMap<Character, Trie>(children.size());
-        for (Character child : children) {
-            this.children.put(child, new Trie());
+        this.children = new LinkedHashMap<Character, Trie>();
+
+        if(childrenCharacters == null) return;
+        for (Character child : childrenCharacters) {
+            this.children.put(child, new Trie(child, true));
         }
     }
 

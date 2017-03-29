@@ -7,6 +7,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 public class RegexCompressorTest {
     @Test
     public void compressTest() {
@@ -18,15 +20,23 @@ public class RegexCompressorTest {
         StringBuilder result;
 
         result = new StringBuilder();
-        buildRegex(new Trie(null, true), result);
+        buildRegex(null, true, result);
         assertThat(result.toString(), is(""));
 
         result = new StringBuilder();
-        buildRegex(new Trie('a', true), result);
+        buildRegex(new Trie(null, true), false, result);
+        assertThat(result.toString(), is(""));
+
+        result = new StringBuilder();
+        buildRegex(new Trie('a', true), false, result);
         assertThat(result.toString(), is("a"));
 
         result = new StringBuilder();
-        buildRegex(new Trie('a', true, asList('b')), result);
+        buildRegex(new Trie('a', false, asList('b')), false, result);
         assertThat(result.toString(), is("ab"));
+
+        result = new StringBuilder();
+        buildRegex(new Trie('a', true, asList('b')), true, result);
+        assertThat(result.toString(), is("ab?"));
     }
 }
