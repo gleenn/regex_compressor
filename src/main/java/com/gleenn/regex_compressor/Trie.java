@@ -59,11 +59,10 @@ public class Trie {
         char c = word.charAt(0);
         Trie node = parent.children.get(c);
         if (node == null) {
-            node = new Trie(c, wordLength > 1);
+            node = new Trie(c, wordLength == 1);
             parent.children.put(c, node);
         } else if (wordLength == 1) {
             node.terminal = true;
-//            return node;
         }
         return addWord(node, word.substring(1));
     }
