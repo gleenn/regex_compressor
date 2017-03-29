@@ -10,18 +10,15 @@ public class RegexCompressor {
             trie.addWord(string);
         }
         StringBuilder result = new StringBuilder();
-        buildRegex(trie, true, result);
+        buildRegex(trie, result);
         return result.toString();
     }
 
     public static void buildRegex(Trie trie, StringBuilder result) {
-        buildRegex(trie, false, result);
-    }
-
-    public static void buildRegex(Trie trie, boolean skipParens, StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
         Character character = trie.getCharacter();
-        if(character != null) {
+        boolean characterIsNull = character != null;
+        if(characterIsNull) {
             result.append(character);
         }
 
@@ -36,7 +33,7 @@ public class RegexCompressor {
                 buildRegex(child, result);
             }
         } else {
-            if(!skipParens) {
+            if(characterIsNull) {
                 result.append("(?:");
             }
             for(Trie child : childrenTries.values()) {
@@ -44,7 +41,7 @@ public class RegexCompressor {
                 result.append("|");
             }
             result.deleteCharAt(result.length()-1); // remove extra "|"
-            if(!skipParens) {
+            if(characterIsNull) {
                 result.append(")");
             }
         }
