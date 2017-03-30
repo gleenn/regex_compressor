@@ -25,6 +25,9 @@ public class RegexCompressorTest {
         assertThat(compress(asList("a", "b", "ab", "abc")), is("a(?:bc?)?|b"));
 
         assertThat(compress(asList("foo", "bar", "baz")), is("foo|ba(?:r|z)"));
+
+        assertThat(compress(asList("foo", "bar","baz","quux")), is("foo|ba(?:r|z)|quux"));
+//        assertThat(compress(asList("foo", "bar","baz","quux")), is("foo|ba[rz]|quux"));
     }
 
     @Test
