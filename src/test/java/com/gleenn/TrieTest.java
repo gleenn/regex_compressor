@@ -43,6 +43,15 @@ public class TrieTest {
     }
 
     @Test
+    public void getTest_returnsSubTrieMatchingCharacter() {
+        Trie trie = new Trie();
+        trie.addWord("a");
+        trie.addWord("bc");
+        assertThat(trie.get('b').get('c').isTerminal(), is(true));
+        assertThat(trie.get('b').get('c').getChildren().size(), is(0));
+    }
+
+    @Test
     public void equalsTest() {
         assertThat(new Trie().equals(new Trie()), is(true));
         assertThat(new Trie().addWord("a").equals(new Trie().addWord("a")), is(true));

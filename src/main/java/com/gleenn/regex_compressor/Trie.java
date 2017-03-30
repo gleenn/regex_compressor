@@ -68,6 +68,10 @@ public class Trie {
         return addWord(insertionNode, word.substring(1));
     }
 
+    public Trie get(Character c) {
+        return children.get(c);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
