@@ -31,7 +31,7 @@ public class Trie {
     public Trie(Character character, boolean terminal, List<Character> childrenCharacters) {
         this.character = character;
         this.terminal = terminal;
-        this.children = new LinkedHashMap<Character, Trie>();
+        this.children = new LinkedHashMap<>();
 
         if(childrenCharacters == null) return;
         for (Character child : childrenCharacters) {
