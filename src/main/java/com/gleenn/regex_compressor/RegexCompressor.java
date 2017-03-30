@@ -26,7 +26,7 @@ public final class RegexCompressor {
 
         if(childrenTries.isEmpty()) return;
 
-        if((hasNoChildren(getOnlyChild(trie)) || !trie.isTerminal()) && hasOnlyChild(trie)) {
+        if(hasOnlyChild(trie) && (hasNoChildren(getOnlyChild(trie)) || !trie.isTerminal())) {
             for(Trie child : childrenTries.values()) buildRegex(child, result);
         } else {
             boolean allOnlyChildren = true;
