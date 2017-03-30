@@ -24,30 +24,21 @@ public final class RegexCompressor {
         }
         LinkedHashMap<Character, Trie> childrenTries = trie.getChildren();
 
-        if(childrenTries.isEmpty()) {
-            return;
-        }
+        if(childrenTries.isEmpty()) return;
 
-        if(hasOnlyChild(trie) && hasNoChildren(getOnlyChild(trie))
-           ||
-           !trie.isTerminal() && hasOnlyChild(trie) && hasAtMostOneChild((getOnlyChild(trie))))
-        {
-            for(Trie child : childrenTries.values()) {
-                buildRegex(child, result);
-            }
+        if((hasNoChildren(getOnlyChild(trie)) || !trie.isTerminal()) && hasOnlyChild(trie)) {
+            for(Trie child : childrenTries.values()) buildRegex(child, result);
         } else {
             if(character != null) result.append("(?:");
             for(Trie child : childrenTries.values()) {
                 buildRegex(child, result);
                 result.append("|");
             }
-            result.deleteCharAt(result.length() - 1); // remove extra "|"
+            result.deleteCharAt(result.length() - 1);
             if(character != null) result.append(")");
         }
 
-        if(trie.isTerminal()) {
-            result.append("?");
-        }
+        if(trie.isTerminal()) result.append("?");
     }
 
 //    private static String escape(char c) {
