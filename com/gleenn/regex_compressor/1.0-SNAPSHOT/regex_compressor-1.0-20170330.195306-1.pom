@@ -8,7 +8,7 @@
         <github.global.server>github</github.global.server>
     </properties>
     <groupId>com.gleenn</groupId>
-    <artifactId>regex-compressor</artifactId>
+    <artifactId>regex_compressor</artifactId>
     <version>1.0-SNAPSHOT</version>
     <distributionManagement>
         <repository>
