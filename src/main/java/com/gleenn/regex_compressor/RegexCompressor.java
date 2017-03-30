@@ -36,7 +36,10 @@ public final class RegexCompressor {
 //        if(character != null) out.println("children count of a" + childrenTries.size());
 
         // this condition needs to be ( i have only 1 child and that child has no ??? <- this might be recursive which would suck
-        if(hasOnlyChild(trie) && hasNoChildren(getOnlySubTrie(trie))) {
+        if(!trie.isTerminal() &&
+                hasOnlyChild(trie) &&
+                (hasOnlyChild((getOnlySubTrie(trie))) ||
+                        hasNoChildren(getOnlySubTrie(trie)))) {
             for(Trie child : childrenTries.values()) {
                 buildRegex(child, result);
             }
