@@ -3,7 +3,6 @@ package com.gleenn.regex_compressor;
 import static com.gleenn.regex_compressor.Trie.*;
 import static java.lang.System.out;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -34,14 +33,9 @@ public final class RegexCompressor {
             return;
         }
 
-        if(hasOnlyChild(trie) &&
-           hasNoChildren(getOnlyChild(trie))
-//                &&
-//           getOnlyChild(trie).isTerminal()
+        if(hasOnlyChild(trie) && hasNoChildren(getOnlyChild(trie))
            ||
-           !trie.isTerminal() &&
-           hasOnlyChild(trie) &&
-           hasAtMostOneChild((getOnlyChild(trie))))
+           !trie.isTerminal() && hasOnlyChild(trie) && hasAtMostOneChild((getOnlyChild(trie))))
         {
             for(Trie child : childrenTries.values()) {
                 buildRegex(child, result);
