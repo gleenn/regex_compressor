@@ -4,7 +4,7 @@ import com.gleenn.regex_compressor.Trie;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 public class TrieTest {
     @Test
