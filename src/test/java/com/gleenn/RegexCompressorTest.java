@@ -18,6 +18,8 @@ public class RegexCompressorTest {
         assertThat(compress(asList("abcd", "a")), is("a(?:bcd)?"));
         assertThat(compress(asList("a", "b", "ab")), is("ab?|b"));
         assertThat(compress(asList("a", "b", "ab", "abc")), is("a(?:bc?)?|b"));
+
+        assertThat(compress(asList("foo", "bar", "baz")), is("foo|ba(?:r|z)"));
     }
 
     @Test
