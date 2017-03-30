@@ -25,7 +25,7 @@ public class Trie {
     }
 
     public Trie(Character character, boolean terminal) {
-        this(character, terminal, new LinkedHashMap<Character, Trie>());
+        this(character, terminal, new LinkedHashMap<>());
     }
 
     public Trie(Character character, boolean terminal, List<Character> childrenCharacters) {
@@ -57,15 +57,15 @@ public class Trie {
         if (wordLength == 0) return parent;
 
         char c = word.charAt(0);
-        Trie node = parent.children.get(c);
-        if (node == null) {
-            node = new Trie(c, wordLength == 1);
-            parent.children.put(c, node);
+        Trie insertionNode = parent.children.get(c);
+        if (insertionNode == null) {
+            insertionNode = new Trie(c, wordLength == 1);
+            parent.children.put(c, insertionNode);
         } else if (wordLength == 1) {
-            node.terminal = true;
-            return node;
+            insertionNode.terminal = true;
+            return insertionNode;
         }
-        return addWord(node, word.substring(1));
+        return addWord(insertionNode, word.substring(1));
     }
 
     @Override

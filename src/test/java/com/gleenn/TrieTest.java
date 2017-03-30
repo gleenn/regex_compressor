@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class TrieTest {
     @Test
-    public void addWordTest() {
+    public void addWordTest_setsTerminalPropertyCorrectly() {
         Trie root = new Trie();
         assertThat(root.isTerminal(), is(false));
 
@@ -20,6 +20,14 @@ public class TrieTest {
 
         Trie trieB = trieA.getChildren().get('b');
         assertThat(trieB.isTerminal(), is(false));
+    }
+
+    @Test
+    public void addWordTest_setsTerminalPropertyCorrectly_evenWithShorterOverlapper() {
+        Trie root = new Trie();
+        root.addWord("abcd");
+        root.addWord("a");
+        assertThat(root.getChildren().get('a').isTerminal(), is(true));
     }
 
     @Test
