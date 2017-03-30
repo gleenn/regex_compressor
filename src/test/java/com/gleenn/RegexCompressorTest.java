@@ -8,13 +8,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedHashMap;
+
 public class RegexCompressorTest {
     @Test
     public void compressTest() {
-        assertThat(compress(asList("a", "b")), is("a|b"));
         assertThat(compress(asList("a")), is("a"));
+        assertThat(compress(asList("a", "b")), is("a|b"));
+        assertThat(compress(asList("a", "b", "c")), is("a|b|c"));
+        assertThat(compress(asList("a", "bc")), is("a|bc"));
         assertThat(compress(asList("abcd", "a")), is("a(?:bcd)?"));
-        assertThat(compress(asList("a", "b", "ab")), is("ab?|b"));
+//        assertThat(compress(asList("a", "b", "ab")), is("ab?|b"));
     }
 
     @Test
@@ -44,10 +48,5 @@ public class RegexCompressorTest {
         result = new StringBuilder();
         buildRegex(new Trie('a', true, asList('b', 'c')), result);
         assertThat(result.toString(), is("a(?:b|c)?"));
-
-//        result = new StringBuilder();
-//        new LinkedHashMap<Character, Trie>();
-//        buildRegex(new Trie('a', true, new Trie('b', )), result);
-//        assertThat(result.toString(), is("ab?"));
     }
 }

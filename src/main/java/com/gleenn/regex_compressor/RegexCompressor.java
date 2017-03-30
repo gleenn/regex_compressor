@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class RegexCompressor {
+public final class RegexCompressor {
     public static String compress(List<String> strings) {
         Trie trie = new Trie();
         for(String string : strings) {
@@ -17,7 +17,7 @@ public class RegexCompressor {
         return result.toString();
     }
 
-    public static void buildRegex(Trie trie, StringBuilder result) {
+    public static void buildRegex(final Trie trie, final StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
         Character character = trie.getCharacter();
         out.print("Char: ");
@@ -35,10 +35,8 @@ public class RegexCompressor {
 
 //        if(character != null) out.println("children count of a" + childrenTries.size());
 
-
         // this condition needs to be ( i have only 1 child and that child has no ??? <- this might be recursive which would suck
-        if(childrenTries.size() == 1 &&
-                new ArrayList<>(childrenTries.values()).get(0).getChildren().size() > 0) {
+        if(hasOnlyChild(trie) && hasNoChildren(getOnlySubTrie(trie))) {
             for(Trie child : childrenTries.values()) {
                 buildRegex(child, result);
             }
@@ -52,10 +50,25 @@ public class RegexCompressor {
             if(character != null) result.append(")");
         }
 
-
         if(trie.isTerminal()) {
             result.append("?");
         }
+    }
+
+    public static Trie getOnlySubTrie(final Trie trie) {
+        return new ArrayList<>(trie.getChildren().values()).get(0);
+    }
+
+    public static boolean hasOnlyChild(final Trie trie) {
+        return trie.getChildren().size() == 1;
+    }
+
+    public static boolean hasChildren(final Trie trie) {
+        return trie.getChildren().size() > 0;
+    }
+
+    public static boolean hasNoChildren(final Trie trie) {
+        return trie.getChildren().size() == 0;
     }
 
     private static String escape(char c) {
