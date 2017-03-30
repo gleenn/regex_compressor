@@ -1,7 +1,6 @@
 package com.gleenn.regex_compressor;
 
 import static com.gleenn.regex_compressor.Trie.*;
-import static java.lang.System.out;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,15 +19,11 @@ public final class RegexCompressor {
     public static void buildRegex(final Trie trie, final StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
         Character character = trie.getCharacter();
-        out.print("Char: ");
         if(character != null) {
             result.append(character);
         }
-        out.print(character + " has ");
-
         LinkedHashMap<Character, Trie> childrenTries = trie.getChildren();
 
-        out.println(childrenTries.size() + " children and is terminal " + (trie.isTerminal() ? "t" : "f"));
         if(childrenTries.isEmpty()) {
             return;
         }
