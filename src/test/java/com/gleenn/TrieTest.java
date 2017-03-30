@@ -28,6 +28,11 @@ public class TrieTest {
         root.addWord("abcd");
         root.addWord("a");
         assertThat(root.getChildren().get('a').isTerminal(), is(true));
+
+        Trie rootBackwards = new Trie();
+        rootBackwards.addWord("a");
+        rootBackwards.addWord("abcd");
+        assertThat(rootBackwards.getChildren().get('a').isTerminal(), is(true));
     }
 
     @Test
