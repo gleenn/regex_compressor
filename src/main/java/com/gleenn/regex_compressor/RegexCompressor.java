@@ -1,5 +1,6 @@
 package com.gleenn.regex_compressor;
 
+import static com.gleenn.regex_compressor.Trie.*;
 import static java.lang.System.out;
 
 import java.util.ArrayList;
@@ -33,13 +34,15 @@ public final class RegexCompressor {
             return;
         }
 
-//        if(character != null) out.println("children count of a" + childrenTries.size());
-
-        // this condition needs to be ( i have only 1 child and that child has no ??? <- this might be recursive which would suck
-        if(!trie.isTerminal() &&
-                hasOnlyChild(trie) &&
-                (hasOnlyChild((getOnlySubTrie(trie))) ||
-                        hasNoChildren(getOnlySubTrie(trie)))) {
+        if(hasOnlyChild(trie) &&
+           hasNoChildren(getOnlyChild(trie))
+//                &&
+//           getOnlyChild(trie).isTerminal()
+           ||
+           !trie.isTerminal() &&
+           hasOnlyChild(trie) &&
+           hasAtMostOneChild((getOnlyChild(trie))))
+        {
             for(Trie child : childrenTries.values()) {
                 buildRegex(child, result);
             }
@@ -58,23 +61,7 @@ public final class RegexCompressor {
         }
     }
 
-    public static Trie getOnlySubTrie(final Trie trie) {
-        return new ArrayList<>(trie.getChildren().values()).get(0);
-    }
-
-    public static boolean hasOnlyChild(final Trie trie) {
-        return trie.getChildren().size() == 1;
-    }
-
-    public static boolean hasChildren(final Trie trie) {
-        return trie.getChildren().size() > 0;
-    }
-
-    public static boolean hasNoChildren(final Trie trie) {
-        return trie.getChildren().size() == 0;
-    }
-
-    private static String escape(char c) {
-        return "\\ ^ $ * + ? . | ( ) { } [ ]";
-    }
+//    private static String escape(char c) {
+//        return "\\ ^ $ * + ? . | ( ) { } [ ]";
+//    }
 }

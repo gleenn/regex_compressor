@@ -1,5 +1,6 @@
 package com.gleenn.regex_compressor;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -70,6 +71,26 @@ public class Trie {
 
     public Trie get(Character c) {
         return children.get(c);
+    }
+
+    public static Trie getOnlyChild(final Trie trie) {
+        return new ArrayList<>(trie.getChildren().values()).get(0);
+    }
+
+    public static boolean hasOnlyChild(final Trie trie) {
+        return trie.getChildren().size() == 1;
+    }
+
+    public static boolean hasAtMostOneChild(final Trie trie) {
+        return trie.getChildren().size() <= 1;
+    }
+
+    public static boolean hasChildren(final Trie trie) {
+        return trie.getChildren().size() > 0;
+    }
+
+    public static boolean hasNoChildren(final Trie trie) {
+        return trie.getChildren().size() == 0;
     }
 
     @Override
