@@ -93,6 +93,8 @@ public class Trie {
         return trie.getChildren().size() == 0;
     }
 
+    public static boolean isTerminal(Trie trie) { return trie.isTerminal(); }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

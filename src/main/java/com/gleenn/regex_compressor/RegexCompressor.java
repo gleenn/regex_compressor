@@ -29,13 +29,24 @@ public final class RegexCompressor {
         if((hasNoChildren(getOnlyChild(trie)) || !trie.isTerminal()) && hasOnlyChild(trie)) {
             for(Trie child : childrenTries.values()) buildRegex(child, result);
         } else {
-            if(character != null) result.append("(?:");
+            boolean allOnlyChildren = true;
             for(Trie child : childrenTries.values()) {
-                buildRegex(child, result);
-                result.append("|");
+                allOnlyChildren &= hasNoChildren(child) && child.isTerminal();
             }
-            result.deleteCharAt(result.length() - 1);
-            if(character != null) result.append(")");
+
+            if(allOnlyChildren) {
+                result.append("[");
+                for(Trie child : childrenTries.values()) buildRegex(child, result);
+                result.append("]");
+            } else {
+                if(character != null) result.append("(?:");
+                for(Trie child : childrenTries.values()) {
+                    buildRegex(child, result);
+                    result.append("|");
+                }
+                result.deleteCharAt(result.length() - 1);
+                if(character != null) result.append(")");
+            }
         }
 
         if(trie.isTerminal()) result.append("?");

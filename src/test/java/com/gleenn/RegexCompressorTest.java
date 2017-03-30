@@ -4,30 +4,27 @@ import static com.gleenn.regex_compressor.RegexCompressor.buildRegex;
 import static com.gleenn.regex_compressor.RegexCompressor.compress;
 import com.gleenn.regex_compressor.Trie;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegexCompressorTest {
     @Test
     public void compressTest() {
         assertThat(compress(asList("a")), is("a"));
-        assertThat(compress(asList("a", "b")), is("a|b"));
-        assertThat(compress(asList("a", "b", "c")), is("a|b|c"));
+        assertThat(compress(asList("a", "b")), is("[ab]"));
+        assertThat(compress(asList("a", "b", "c")), is("[abc]"));
         assertThat(compress(asList("a", "bc")), is("a|bc"));
         assertThat(compress(asList("abcd", "a")), is("a(?:bcd)?"));
         assertThat(compress(asList("a", "b", "ab")), is("ab?|b"));
         assertThat(compress(asList("a", "b", "ab", "abc")), is("a(?:bc?)?|b"));
-
-        assertThat(compress(asList("foo", "bar", "baz")), is("foo|ba(?:r|z)"));
-
-        assertThat(compress(asList("foo", "bar","baz","quux")), is("foo|ba(?:r|z)|quux"));
-//        assertThat(compress(asList("foo", "bar","baz","quux")), is("foo|ba[rz]|quux"));
+        assertThat(compress(asList("foo", "bar", "baz")), is("foo|ba[rz]"));
+        assertThat(compress(asList("foo", "bar","baz","quux")), is("foo|ba[rz]|quux"));
     }
 
     @Test
@@ -83,19 +80,19 @@ public class RegexCompressorTest {
         assertThat(result.toString(), is("a"));
 
         result = new StringBuilder();
-        buildRegex(new Trie('a', false, asList('b')), result);
+        buildRegex(new Trie('a', false, singletonList('b')), result);
         assertThat(result.toString(), is("ab"));
 
         result = new StringBuilder();
-        buildRegex(new Trie('a', true, asList('b')), result);
+        buildRegex(new Trie('a', true, singletonList('b')), result);
         assertThat(result.toString(), is("ab?"));
 
         result = new StringBuilder();
         buildRegex(new Trie('a', false, asList('b', 'c')), result);
-        assertThat(result.toString(), is("a(?:b|c)"));
+        assertThat(result.toString(), is("a[bc]"));
 
         result = new StringBuilder();
         buildRegex(new Trie('a', true, asList('b', 'c')), result);
-        assertThat(result.toString(), is("a(?:b|c)?"));
+        assertThat(result.toString(), is("a[bc]?"));
     }
 }
