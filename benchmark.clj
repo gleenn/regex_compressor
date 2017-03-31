@@ -3,11 +3,8 @@
 (require 'frak)
 (import com.gleenn.regex_compressor.RegexCompressor)
 
-(def words
-  (-> (io/file "/usr/share/dict/words")
-      io/reader
-      line-seq))
-
+;(def ud-words (-> (io/file "/tmp/less-words.csv") io/reader line-seq))
+(def words (-> (io/file "/usr/share/dict/words") io/reader line-seq))
 (defn naive-pattern
       "Create a naive regular expression pattern for matching every string
        in strs."

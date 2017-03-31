@@ -1,0 +1,102 @@
+These are benchmark results from comparing "n-pat" (the simple concatenation of all patterns), "f-pat" (using frak to generate the pattern), and "g-pat" (using RegexCompressor).
+Note particularly that this is benchmarking the **compile time** of a regex, not the usage of it. Using the naive concatenation is fastest, but both Frak and RegexCompressor will generate a far more compact regex that will perform far more quickly when actually matching strings, which is the whole point of this library.
+
+Of note, RegexCompressor ran in ~16 milliseconds and Frak ran in ~1.6 seconds so it is roughly 2 orders of magnitude slower.
+
+The naive concatenation solution is ~4 milliseconds to compile, so you only suffer ~12 milliseconds longer and get a far superior, compacted regex for matching later.
+
+
+"n-pat"
+Estimating sampling overhead
+Warming up for JIT optimisations 10000000000 ...
+  compilation occurred before 19645962 iterations
+  compilation occurred before 93863508 iterations
+  compilation occurred before 184816383 iterations
+  compilation occurred before 185544006 iterations
+  compilation occurred before 278679750 iterations
+  compilation occurred before 643946496 iterations
+Estimating execution count ...
+Sampling ...
+Final GC...
+Checking GC...
+Finding outliers ...
+Bootstrapping ...
+Checking outlier significance
+Warming up for JIT optimisations 10000000000 ...
+  compilation occurred before 334 iterations
+  compilation occurred before 2332 iterations
+Estimating execution count ...
+Sampling ...
+Final GC...
+Checking GC...
+Finding outliers ...
+Bootstrapping ...
+Checking outlier significance
+x86_64 Mac OS X 10.12.2 8 cpu(s)
+Java HotSpot(TM) 64-Bit Server VM 25.51-b03
+Runtime arguments: -Dfile.encoding=UTF-8 -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:-OmitStackTraceInFastThrow -Dclojure.compile.path=/Users/glenn/workspace/urban_dictionary/regex-compressor/target/classes -Dregex-compressor.version=0.1.0-SNAPSHOT -Dclojure.debug=false
+Evaluation count : 16440 in 60 samples of 274 calls.
+      Execution time sample mean : 3.648322 ms
+             Execution time mean : 3.648389 ms
+Execution time sample std-deviation : 73.538227 µs
+    Execution time std-deviation : 74.682365 µs
+   Execution time lower quantile : 3.528055 ms ( 2.5%)
+   Execution time upper quantile : 3.803928 ms (97.5%)
+                   Overhead used : 9.182139 ns
+
+Found 2 outliers in 60 samples (3.3333 %)
+	low-severe	 2 (3.3333 %)
+ Variance from outliers : 9.3785 % Variance is slightly inflated by outliers
+"f-pat"
+Warming up for JIT optimisations 10000000000 ...
+  compilation occurred before 1 iterations
+  compilation occurred before 2 iterations
+  compilation occurred before 3 iterations
+  compilation occurred before 5 iterations
+Estimating execution count ...
+Sampling ...
+Final GC...
+Checking GC...
+Finding outliers ...
+Bootstrapping ...
+Checking outlier significance
+x86_64 Mac OS X 10.12.2 8 cpu(s)
+Java HotSpot(TM) 64-Bit Server VM 25.51-b03
+Runtime arguments: -Dfile.encoding=UTF-8 -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:-OmitStackTraceInFastThrow -Dclojure.compile.path=/Users/glenn/workspace/urban_dictionary/regex-compressor/target/classes -Dregex-compressor.version=0.1.0-SNAPSHOT -Dclojure.debug=false
+Evaluation count : 60 in 60 samples of 1 calls.
+      Execution time sample mean : 1.637074 sec
+             Execution time mean : 1.637321 sec
+Execution time sample std-deviation : 59.672134 ms
+    Execution time std-deviation : 60.435075 ms
+   Execution time lower quantile : 1.540087 sec ( 2.5%)
+   Execution time upper quantile : 1.777413 sec (97.5%)
+                   Overhead used : 9.182139 ns
+
+Found 5 outliers in 60 samples (8.3333 %)
+	low-severe	 4 (6.6667 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 23.8054 % Variance is moderately inflated by outliers
+"g-pat"
+Warming up for JIT optimisations 10000000000 ...
+  compilation occurred before 132 iterations
+  compilation occurred before 263 iterations
+  compilation occurred before 394 iterations
+Estimating execution count ...
+Sampling ...
+Final GC...
+Checking GC...
+Finding outliers ...
+Bootstrapping ...
+Checking outlier significance
+x86_64 Mac OS X 10.12.2 8 cpu(s)
+Java HotSpot(TM) 64-Bit Server VM 25.51-b03
+Runtime arguments: -Dfile.encoding=UTF-8 -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:-OmitStackTraceInFastThrow -Dclojure.compile.path=/Users/glenn/workspace/urban_dictionary/regex-compressor/target/classes -Dregex-compressor.version=0.1.0-SNAPSHOT -Dclojure.debug=false
+Evaluation count : 3660 in 60 samples of 61 calls.
+      Execution time sample mean : 16.638712 ms
+             Execution time mean : 16.638031 ms
+Execution time sample std-deviation : 382.241969 µs
+    Execution time std-deviation : 384.765788 µs
+   Execution time lower quantile : 16.117383 ms ( 2.5%)
+   Execution time upper quantile : 17.440051 ms (97.5%)
+                   Overhead used : 9.182139 ns
+true
