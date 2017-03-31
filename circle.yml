@@ -5,3 +5,7 @@ machine:
 test:
   override:
     - mvn test
+
+dependencies:
+  override:
+    - mvn install
