@@ -2,6 +2,7 @@ package com.gleenn;
 
 import static com.gleenn.regex_compressor.RegexCompressor.buildRegex;
 import static com.gleenn.regex_compressor.RegexCompressor.compress;
+import static com.gleenn.regex_compressor.RegexCompressor.escape;
 import com.gleenn.regex_compressor.Trie;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -25,6 +26,34 @@ public class RegexCompressorTest {
         assertThat(compress(asList("a", "b", "ab", "abc")), is("a(?:bc?)?|b"));
         assertThat(compress(asList("foo", "bar", "baz")), is("foo|ba[rz]"));
         assertThat(compress(asList("foo", "bar","baz","quux")), is("foo|ba[rz]|quux"));
+    }
+
+    @Test
+    public void escapeTest() {
+        assertThat(escape('('), is("\\("));
+        assertThat(escape(')'), is("\\)"));
+        assertThat(escape('{'), is("\\{"));
+        assertThat(escape('}'), is("\\}"));
+        assertThat(escape('['), is("\\["));
+        assertThat(escape(']'), is("\\]"));
+        assertThat(escape('.'), is("\\."));
+        assertThat(escape('+'), is("\\+"));
+        assertThat(escape('*'), is("\\*"));
+        assertThat(escape('?'), is("\\?"));
+        assertThat(escape('^'), is("\\^"));
+        assertThat(escape('$'), is("\\$"));
+        assertThat(escape('|'), is("\\|"));
+
+        assertThat(escape('a'), is("a"));
+        assertThat(escape('A'), is("A"));
+        assertThat(escape('√'), is("√"));
+    }
+    @Test
+    public void compressTest_escaping() {
+        assertThat(compress(asList("{")), is("\\{"));
+        assertThat(compress(asList(":)")), is(":\\)"));
+        assertThat(compress(asList(":)-|--<")), is(":\\)-\\|--<"));
+        assertThat(compress(asList("¯\\_(ツ)_/¯")), is("¯\\_\\(ツ\\)_/¯"));
     }
 
     @Test

@@ -20,7 +20,7 @@ public final class RegexCompressor {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
         Character character = trie.getCharacter();
         if(character != null) {
-            result.append(character);
+            result.append(escape(character));
         }
         LinkedHashMap<Character, Trie> childrenTries = trie.getChildren();
 
@@ -52,7 +52,22 @@ public final class RegexCompressor {
         if(trie.isTerminal()) result.append("?");
     }
 
-//    private static String escape(char c) {
-//        return "\\ ^ $ * + ? . | ( ) { } [ ]";
-//    }
+    public static String escape(char c) {
+        switch(c) {
+            case '(': return "\\(";
+            case ')': return "\\)";
+            case '{': return "\\{";
+            case '}': return "\\}";
+            case '[': return "\\[";
+            case ']': return "\\]";
+            case '.': return "\\.";
+            case '+': return "\\+";
+            case '*': return "\\*";
+            case '?': return "\\?";
+            case '^': return "\\^";
+            case '$': return "\\$";
+            case '|': return "\\|";
+            default: return c + "";
+        }
+    }
 }
