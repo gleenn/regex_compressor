@@ -65,6 +65,11 @@ public final class RegexCompressor {
             case '*': return "\\*";
             case '?': return "\\?";
             case '^': return "\\^";
+            case '<': return "\\<";
+            case '>': return "\\>";
+            case '-': return "\\-";
+            case '=': return "\\=";
+            case '!': return "\\!";
             case '$': return "\\$";
             case '\\': return "\\\\";
             case '|': return "\\|";
