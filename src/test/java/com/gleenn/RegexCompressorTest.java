@@ -43,6 +43,12 @@ public class RegexCompressorTest {
         assertThat(escape('^'), is("\\^"));
         assertThat(escape('$'), is("\\$"));
         assertThat(escape('|'), is("\\|"));
+        assertThat(escape('\\'), is("\\\\"));
+        assertThat(escape('<'), is("\\<"));
+        assertThat(escape('>'), is("\\>"));
+        assertThat(escape('-'), is("\\-"));
+        assertThat(escape('='), is("\\="));
+        assertThat(escape('!'), is("\\!"));
 
         assertThat(escape('a'), is("a"));
         assertThat(escape('A'), is("A"));
@@ -52,8 +58,8 @@ public class RegexCompressorTest {
     public void compressTest_escaping() {
         assertThat(compress(asList("{")), is("\\{"));
         assertThat(compress(asList(":)")), is(":\\)"));
-        assertThat(compress(asList(":)-|--<")), is(":\\)-\\|--<"));
-        assertThat(compress(asList("¯\\_(ツ)_/¯")), is("¯\\_\\(ツ\\)_/¯"));
+        assertThat(compress(asList(":)-|--<")), is(":\\)\\-\\|\\-\\-\\<"));
+        assertThat(compress(asList("¯\\_(ツ)_/¯")), is("¯\\\\_\\(ツ\\)_/¯"));
     }
 
     @Test
@@ -88,7 +94,7 @@ public class RegexCompressorTest {
                 "vandalize", "vanquish", "vessel", "vicious", "vile", "villain", "violence", "violent",
                 "walk the plank", "weapons", "X marks the spot", "yellow fever", "yo-ho-ho");
         String regexString = compress(words);
-        assertThat(regexString, is("a(?:bandon|dventure|hoy|nchor|rm(?:ada|s)|s(?:ea|hore|sault)|ttack|ye-aye)|b(?:a(?:d|nd(?:anna|it|olier)|r(?:baric|rel)|ttle)|e(?:ach|head)|o(?:atswain|s'n|unty)|r(?:awl|utal)|uccaneer)|c(?:a(?:nnon|p(?:size|t(?:ain|ure))|rgo|ve)|h(?:allenge|est)|o(?:ast(?:line)?|ins|mpass|n(?:fiscate|quest|traband)|r(?:pse|sair)|urse)|r(?:ew|iminal|o(?:ok|w's nest)|uel)|u(?:rse|t(?:lass|throat)))|d(?:a(?:gger|nger|ring)|e(?:ad reckoning|ck(?: hands)?|sert island)|ishonest|oubloon)|e(?:arring|scape|vil|xplore|ye patch)|f(?:e(?:ar(?:some)?|rocious)|i(?:ght|rst mate)|l(?:ag|eet|otsam and jetsam)|ortune)|g(?:a(?:lleon|ngplank)|ear|ibbet|old|reed|un(?:ner|powder)?)|h(?:aul|eist|i(?:gh seas|jack)|o(?:ok|ld|rizon|stile)|u(?:ll|rricane))|i(?:ll(?:egal|-gotten)|nfamous|sland)|je(?:tsam|wels)|Jolly Roger|k(?:eel(?:haul)?|i(?:dnap|ll)|nife)|l(?:a(?:nd(?:-ho|lubber)?|sh|wless)|egend|imey|o(?:o(?:kout|t)|re)|ucre)|Long John Silver|m(?:a(?:ggot|laria|p|r(?:auder|oon)|t(?:iner|es)|st|yhem)|e(?:nace|rchant)|u(?:sket|tiny))|n(?:a(?:utical|vigate)|otorious)|New World|o(?:cean|ld salt|utcasts|verboard)|Old World|p(?:ar(?:ley|rot)|egleg|i(?:eces of eight|llage|rate|stol)|l(?:ank|under)|r(?:edatory|ivateer|owl))|qu(?:arter(?:master|s)|est)|r(?:a(?:id|nsack|t(?:ions)?)|e(?:alm|ckoning|v(?:enge|olt))|i(?:ches|gging)|o(?:am|b(?:ber)?|pe)|u(?:dder|ffian|m|thless))|s(?:a(?:botage|il(?:ing|or)?)|c(?:a(?:lawag|r)|urvy)|e(?:a(?:s|weed)|xtant)|h(?:i(?:p(?:mate)?|ver-me-timbers)|ore)|ilver|k(?:iff|ull and bones)|poils|teal|w(?:a(?:b the deck|gger|shbuckling)|ord))|t(?:h(?:ie(?:f|very)|ug)|ides|orture|r(?:ade|ea(?:chery|sure(?: island)?)|uce))|un(?:lawful|scrupulous)|v(?:an(?:dalize|quish)|essel|i(?:cious|l(?:e|lain)|olen(?:ce|t)))|w(?:alk the plank|eapons)|X marks the spot|y(?:ellow fever|o-ho-ho)"));
+        assertThat(regexString, is("a(?:bandon|dventure|hoy|nchor|rm(?:ada|s)|s(?:ea|hore|sault)|ttack|ye\\-aye)|b(?:a(?:d|nd(?:anna|it|olier)|r(?:baric|rel)|ttle)|e(?:ach|head)|o(?:atswain|s'n|unty)|r(?:awl|utal)|uccaneer)|c(?:a(?:nnon|p(?:size|t(?:ain|ure))|rgo|ve)|h(?:allenge|est)|o(?:ast(?:line)?|ins|mpass|n(?:fiscate|quest|traband)|r(?:pse|sair)|urse)|r(?:ew|iminal|o(?:ok|w's nest)|uel)|u(?:rse|t(?:lass|throat)))|d(?:a(?:gger|nger|ring)|e(?:ad reckoning|ck(?: hands)?|sert island)|ishonest|oubloon)|e(?:arring|scape|vil|xplore|ye patch)|f(?:e(?:ar(?:some)?|rocious)|i(?:ght|rst mate)|l(?:ag|eet|otsam and jetsam)|ortune)|g(?:a(?:lleon|ngplank)|ear|ibbet|old|reed|un(?:ner|powder)?)|h(?:aul|eist|i(?:gh seas|jack)|o(?:ok|ld|rizon|stile)|u(?:ll|rricane))|i(?:ll(?:egal|\\-gotten)|nfamous|sland)|je(?:tsam|wels)|Jolly Roger|k(?:eel(?:haul)?|i(?:dnap|ll)|nife)|l(?:a(?:nd(?:\\-ho|lubber)?|sh|wless)|egend|imey|o(?:o(?:kout|t)|re)|ucre)|Long John Silver|m(?:a(?:ggot|laria|p|r(?:auder|oon)|t(?:iner|es)|st|yhem)|e(?:nace|rchant)|u(?:sket|tiny))|n(?:a(?:utical|vigate)|otorious)|New World|o(?:cean|ld salt|utcasts|verboard)|Old World|p(?:ar(?:ley|rot)|egleg|i(?:eces of eight|llage|rate|stol)|l(?:ank|under)|r(?:edatory|ivateer|owl))|qu(?:arter(?:master|s)|est)|r(?:a(?:id|nsack|t(?:ions)?)|e(?:alm|ckoning|v(?:enge|olt))|i(?:ches|gging)|o(?:am|b(?:ber)?|pe)|u(?:dder|ffian|m|thless))|s(?:a(?:botage|il(?:ing|or)?)|c(?:a(?:lawag|r)|urvy)|e(?:a(?:s|weed)|xtant)|h(?:i(?:p(?:mate)?|ver\\-me\\-timbers)|ore)|ilver|k(?:iff|ull and bones)|poils|teal|w(?:a(?:b the deck|gger|shbuckling)|ord))|t(?:h(?:ie(?:f|very)|ug)|ides|orture|r(?:ade|ea(?:chery|sure(?: island)?)|uce))|un(?:lawful|scrupulous)|v(?:an(?:dalize|quish)|essel|i(?:cious|l(?:e|lain)|olen(?:ce|t)))|w(?:alk the plank|eapons)|X marks the spot|y(?:ellow fever|o\\-ho\\-ho)"));
 
         Pattern pattern = Pattern.compile(regexString);
         for(String word : words) {
