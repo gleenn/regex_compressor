@@ -43,6 +43,7 @@ public class RegexCompressorTest {
         assertThat(escape('^'), is("\\^"));
         assertThat(escape('$'), is("\\$"));
         assertThat(escape('|'), is("\\|"));
+        assertThat(escape('\\'), is("\\\\"));
 
         assertThat(escape('a'), is("a"));
         assertThat(escape('A'), is("A"));
@@ -53,7 +54,7 @@ public class RegexCompressorTest {
         assertThat(compress(asList("{")), is("\\{"));
         assertThat(compress(asList(":)")), is(":\\)"));
         assertThat(compress(asList(":)-|--<")), is(":\\)-\\|--<"));
-        assertThat(compress(asList("¯\\_(ツ)_/¯")), is("¯\\_\\(ツ\\)_/¯"));
+        assertThat(compress(asList("¯\\_(ツ)_/¯")), is("¯\\\\_\\(ツ\\)_/¯"));
     }
 
     @Test
