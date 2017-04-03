@@ -2,10 +2,10 @@ machine:
   java:
     version: openjdk8
 
-test:
-  override:
-    - lein junit
+#test:
+#  override:
+#    - lein junit
 
-dependencies:
-  override:
-    - mvn install
+#dependencies:
+#  override:
+#    - mvn install
