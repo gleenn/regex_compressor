@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 public class RegexCompressorTest {
     @Test
     public void compressTest() {
-        assertThat(1, is(2));
         assertThat(compress(asList("a")), is("a"));
         assertThat(compress(asList("a", "b")), is("[ab]"));
         assertThat(compress(asList("a", "b", "c")), is("[abc]"));
