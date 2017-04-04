@@ -4,8 +4,13 @@ import static com.gleenn.regex_compressor.Trie.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public final class RegexCompressor {
+    public static Pattern pattern(List<String> strings) {
+        return Pattern.compile(compress(strings));
+    }
+
     public static String compress(List<String> strings) {
         Trie trie = new Trie();
         for(String string : strings) {

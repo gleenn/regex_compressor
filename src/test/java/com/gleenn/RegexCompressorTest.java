@@ -1,8 +1,6 @@
 package com.gleenn;
 
-import static com.gleenn.regex_compressor.RegexCompressor.buildRegex;
-import static com.gleenn.regex_compressor.RegexCompressor.compress;
-import static com.gleenn.regex_compressor.RegexCompressor.escape;
+import static com.gleenn.regex_compressor.RegexCompressor.*;
 import com.gleenn.regex_compressor.Trie;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -15,6 +13,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class RegexCompressorTest {
+    @Test
+    public void patternTest() {
+        assertThat(pattern(asList("a")).matcher("a").find(), is(true));
+        assertThat(pattern(asList("*Opens and")).matcher("*Opens and").find(), is(true));
+        assertThat(pattern(asList("\\*Opens and")).matcher("\\*Opens and").find(), is(true));
+    }
+
     @Test
     public void compressTest() {
         assertThat(compress(asList("a")), is("a"));
@@ -60,6 +65,7 @@ public class RegexCompressorTest {
         assertThat(compress(asList(":)")), is(":\\)"));
         assertThat(compress(asList(":)-|--<")), is(":\\)\\-\\|\\-\\-\\<"));
         assertThat(compress(asList("¯\\_(ツ)_/¯")), is("¯\\\\_\\(ツ\\)_/¯"));
+        assertThat(compress(asList("*Opens and")), is("\\*Opens and"));
     }
 
     @Test
