@@ -30,6 +30,11 @@ public class RegexCompressorTest {
     }
 
     @Test
+    public void patternTest_withUnicodeChars() {
+        assertThat(pattern(asList("☺")).matcher("☺").find(), is(true));
+    }
+
+    @Test
     public void compressTest() {
         assertThat(compress(asList("a")), is("a"));
         assertThat(compress(asList("a", "b")), is("[ab]"));
