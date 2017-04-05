@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-mvn deploy -X
+mvn test deploy -X
