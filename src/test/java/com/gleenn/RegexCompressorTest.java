@@ -14,6 +14,14 @@ import java.util.regex.Pattern;
 
 public class RegexCompressorTest {
     @Test
+    public void wordPatternTest() {
+        assertThat(wordPattern(asList("a")).matcher("a").find(), is(true));
+        assertThat(wordPattern(asList("a")).matcher("ab").find(), is(false));
+        assertThat(wordPattern(asList("a")).matcher("ba").find(), is(false));
+        assertThat(wordPattern(asList("a")).matcher("bab").find(), is(false));
+    }
+
+    @Test
     public void patternTest() {
         assertThat(pattern(asList("a")).matcher("a").find(), is(true));
         assertThat(pattern(asList("*Opens and")).matcher("*Opens and").find(), is(true));

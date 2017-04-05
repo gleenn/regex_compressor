@@ -11,14 +11,24 @@ public final class RegexCompressor {
         return Pattern.compile(compress(strings));
     }
 
-    public static String compress(List<String> strings) {
+    public static Pattern wordPattern(List<String> strings) {
+        StringBuilder result = new StringBuilder("\\b(?:");
+        compressStringBuilder(strings, result);
+        result.append(")\\b");
+        return Pattern.compile(result.toString());
+    }
+
+    public static StringBuilder compressStringBuilder(List<String> strings, StringBuilder result) {
         Trie trie = new Trie();
         for(String string : strings) {
             trie.addWord(string);
         }
-        StringBuilder result = new StringBuilder();
         buildRegex(trie, result);
-        return result.toString();
+        return result;
+    }
+
+    public static String compress(List<String> strings) {
+        return compressStringBuilder(strings, new StringBuilder()).toString();
     }
 
     public static void buildRegex(final Trie trie, final StringBuilder result) {
