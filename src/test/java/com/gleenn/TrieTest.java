@@ -1,6 +1,8 @@
 package com.gleenn;
 
 import com.gleenn.regex_compressor.Trie;
+import static com.gleenn.regex_compressor.Trie.hasNoChildren;
+import static com.gleenn.regex_compressor.Trie.hasOnlyChild;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -61,5 +63,23 @@ public class TrieTest {
         Trie bFirst = new Trie();
         bFirst.addWord("b").addWord("a");
         assertThat(aFirst.equals(bFirst), is(false));
+    }
+
+    @Test
+    public void hasOnlyChildTest() {
+        Trie trie = new Trie();
+        assertThat(hasOnlyChild(trie), is(false));
+        trie.addWord("a");
+        assertThat(hasOnlyChild(trie), is(true));
+        trie.addWord("b");
+        assertThat(hasOnlyChild(trie), is(false));
+    }
+
+    @Test
+    public void hasNoChildrenTest() {
+        Trie trie = new Trie();
+        assertThat(hasNoChildren(trie), is(true));
+        trie.addWord("a");
+        assertThat(hasNoChildren(trie), is(false));
     }
 }
