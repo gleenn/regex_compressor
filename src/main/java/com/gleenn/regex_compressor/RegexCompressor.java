@@ -7,11 +7,16 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public final class RegexCompressor {
+
+    public static final String REGEX_THAT_MATCHES_NOTHING = "(?!.*)";
+
     public static Pattern pattern(List<String> strings) {
         return Pattern.compile(compress(strings));
     }
 
     public static Pattern wordPattern(List<String> strings) {
+        if(strings.isEmpty()) return Pattern.compile(REGEX_THAT_MATCHES_NOTHING);
+
         StringBuilder result = new StringBuilder("\\b(?:");
         compressStringBuilder(strings, result);
         result.append(")\\b");
@@ -28,6 +33,8 @@ public final class RegexCompressor {
     }
 
     public static String compress(List<String> strings) {
+        if(strings.isEmpty()) return REGEX_THAT_MATCHES_NOTHING;
+
         return compressStringBuilder(strings, new StringBuilder()).toString();
     }
 

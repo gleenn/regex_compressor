@@ -22,6 +22,12 @@ public class RegexCompressorTest {
     }
 
     @Test
+    public void wordPatternTest_whenGivenEmptyList_returnsRegexThatMatchesNothing() {
+        assertThat(wordPattern(asList()).matcher("").find(), is(false));
+        assertThat(wordPattern(asList()).matcher("anything").find(), is(false));
+    }
+
+    @Test
     public void patternTest() {
         assertThat(pattern(asList("a")).matcher("a").find(), is(true));
 
@@ -32,6 +38,11 @@ public class RegexCompressorTest {
     @Test
     public void patternTest_withUnicodeChars() {
         assertThat(pattern(asList("☺")).matcher("☺").find(), is(true));
+    }
+
+    @Test
+    public void compressTest_whenGivenEmptyList_returnsRegexThatMatchesNothing() {
+        assertThat(compress(asList()), is("(?!.*)"));
     }
 
     @Test
