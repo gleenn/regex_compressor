@@ -1,41 +1,35 @@
 package com.gleenn.regex_compressor;
 
 import static com.gleenn.regex_compressor.Trie.*;
+import static java.util.regex.Pattern.compile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public final class RegexCompressor {
-
-    public static final String REGEX_THAT_MATCHES_NOTHING = "(?!.*)";
+    private static final String REGEX_THAT_MATCHES_NOTHING = "(?!.*)";
 
     public static Pattern pattern(List<String> strings) {
-        return Pattern.compile(compress(strings));
+        return compile(compress(strings, Options.defaultOptions()));
     }
 
-    public static Pattern wordPattern(List<String> strings) {
-        if(strings.isEmpty()) return Pattern.compile(REGEX_THAT_MATCHES_NOTHING);
-
-        StringBuilder result = new StringBuilder("\\b(?:");
-        compressStringBuilder(strings, result);
-        result.append(")\\b");
-        return Pattern.compile(result.toString());
+    public static Pattern pattern(final List<String> strings, final Options options) {
+        return compile(compress(strings, options));
     }
 
-    public static StringBuilder compressStringBuilder(List<String> strings, StringBuilder result) {
+    private static String compress(final List<String> strings, final Options options) {
+        if(strings.isEmpty()) return REGEX_THAT_MATCHES_NOTHING;
+
         Trie trie = new Trie();
         for(String string : strings) {
             trie.addWord(string);
         }
+
+        StringBuilder result = new StringBuilder(options.getPrefix());
         buildRegex(trie, result);
-        return result;
-    }
-
-    public static String compress(List<String> strings) {
-        if(strings.isEmpty()) return REGEX_THAT_MATCHES_NOTHING;
-
-        return compressStringBuilder(strings, new StringBuilder()).toString();
+        result.append(options.getSuffix());
+        return result.toString();
     }
 
     public static void buildRegex(final Trie trie, final StringBuilder result) {

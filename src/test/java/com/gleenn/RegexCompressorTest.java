@@ -1,5 +1,6 @@
 package com.gleenn;
 
+import com.gleenn.regex_compressor.Options;
 import static com.gleenn.regex_compressor.RegexCompressor.*;
 import com.gleenn.regex_compressor.Trie;
 import static java.util.Arrays.asList;
@@ -14,21 +15,20 @@ import java.util.regex.Pattern;
 
 public class RegexCompressorTest {
     @Test
-    public void wordPatternTest() {
-        assertThat(wordPattern(asList("a")).matcher("a").find(), is(true));
-        assertThat(wordPattern(asList("a")).matcher("ab").find(), is(false));
-        assertThat(wordPattern(asList("a")).matcher("ba").find(), is(false));
-        assertThat(wordPattern(asList("a")).matcher("bab").find(), is(false));
+    public void pattern_basic() {
+        assertThat(pattern(asList("a")).toString(), is("a"));
+        assertThat(pattern(asList("a", "b")).toString(), is("[ab]"));
+        assertThat(pattern(asList("a", "b", "c")).toString(), is("[abc]"));
+        assertThat(pattern(asList("a", "bc")).toString(), is("a|bc"));
+        assertThat(pattern(asList("abcd", "a")).toString(), is("a(?:bcd)?"));
+        assertThat(pattern(asList("a", "b", "ab")).toString(), is("ab?|b"));
+        assertThat(pattern(asList("a", "b", "ab", "abc")).toString(), is("a(?:bc?)?|b"));
+        assertThat(pattern(asList("foo", "bar", "baz")).toString(), is("foo|ba[rz]"));
+        assertThat(pattern(asList("foo", "bar", "baz", "quux")).toString(), is("foo|ba[rz]|quux"));
     }
 
     @Test
-    public void wordPatternTest_whenGivenEmptyList_returnsRegexThatMatchesNothing() {
-        assertThat(wordPattern(asList()).matcher("").find(), is(false));
-        assertThat(wordPattern(asList()).matcher("anything").find(), is(false));
-    }
-
-    @Test
-    public void patternTest() {
+    public void pattern_matchesStringsCorrectly() {
         assertThat(pattern(asList("a")).matcher("a").find(), is(true));
 
         assertThat(pattern(asList("*Opens and")).matcher("*Opens and").find(), is(true));
@@ -36,26 +36,47 @@ public class RegexCompressorTest {
     }
 
     @Test
-    public void patternTest_withUnicodeChars() {
+    public void pattern_whenGivenEmptyList_returnsRegexThatMatchesNothing() {
+        assertThat(pattern(asList()).toString(), is("(?!.*)"));
+        assertThat(pattern(asList(), Options.defaultOptions().withWordBoundaries()).toString(), is("(?!.*)"));
+    }
+
+    @Test
+    public void pattern_withUnicodeChars() {
         assertThat(pattern(asList("☺")).matcher("☺").find(), is(true));
     }
 
     @Test
-    public void compressTest_whenGivenEmptyList_returnsRegexThatMatchesNothing() {
-        assertThat(compress(asList()), is("(?!.*)"));
+    public void pattern_withWordBoundariesOptions() {
+        final Options options = Options.defaultOptions().withWordBoundaries();
+
+        assertThat(pattern(asList("a"), options).matcher("a").find(), is(true));
+        assertThat(pattern(asList("a"), options).matcher("ab").find(), is(false));
+        assertThat(pattern(asList("a"), options).matcher("ba").find(), is(false));
+        assertThat(pattern(asList("a"), options).matcher("bab").find(), is(false));
     }
 
     @Test
-    public void compressTest() {
-        assertThat(compress(asList("a")), is("a"));
-        assertThat(compress(asList("a", "b")), is("[ab]"));
-        assertThat(compress(asList("a", "b", "c")), is("[abc]"));
-        assertThat(compress(asList("a", "bc")), is("a|bc"));
-        assertThat(compress(asList("abcd", "a")), is("a(?:bcd)?"));
-        assertThat(compress(asList("a", "b", "ab")), is("ab?|b"));
-        assertThat(compress(asList("a", "b", "ab", "abc")), is("a(?:bc?)?|b"));
-        assertThat(compress(asList("foo", "bar", "baz")), is("foo|ba[rz]"));
-        assertThat(compress(asList("foo", "bar","baz","quux")), is("foo|ba[rz]|quux"));
+    public void pattern_withPrefixSet() {
+        final Options options = Options.defaultOptions().prefix("X");
+        assertThat(pattern(asList("a"), options).matcher("Xa").find(), is(true));
+        assertThat(pattern(asList("a"), options).matcher("Za").find(), is(false));
+    }
+
+    @Test
+    public void pattern_withSuffixSet() {
+        final Options options = Options.defaultOptions().suffix("X");
+        assertThat(pattern(asList("a"), options).matcher("aX").find(), is(true));
+        assertThat(pattern(asList("a"), options).matcher("aZ").find(), is(false));
+    }
+
+    @Test
+    public void pattern_withPrefixAndSuffixSet() {
+        final Options options = Options.defaultOptions().suffix("X").prefix("X");
+        assertThat(pattern(asList("a"), options).matcher("XaX").find(), is(true));
+        assertThat(pattern(asList("a"), options).matcher("ZaX").find(), is(false));
+        assertThat(pattern(asList("a"), options).matcher("XaZ").find(), is(false));
+        assertThat(pattern(asList("a"), options).matcher("ZaZ").find(), is(false));
     }
 
     @Test
@@ -84,17 +105,18 @@ public class RegexCompressorTest {
         assertThat(escape('A'), is("A"));
         assertThat(escape('√'), is("√"));
     }
+
     @Test
-    public void compressTest_escaping() {
-        assertThat(compress(asList("{")), is("\\{"));
-        assertThat(compress(asList(":)")), is(":\\)"));
-        assertThat(compress(asList(":)-|--<")), is(":\\)\\-\\|\\-\\-\\<"));
-        assertThat(compress(asList("¯\\_(ツ)_/¯")), is("¯\\\\_\\(ツ\\)_/¯"));
-        assertThat(compress(asList("*Opens and")), is("\\*Opens and"));
+    public void pattern_escaping() {
+        assertThat(pattern(asList("{")).toString(), is("\\{"));
+        assertThat(pattern(asList(":)")).toString(), is(":\\)"));
+        assertThat(pattern(asList(":)-|--<")).toString(), is(":\\)\\-\\|\\-\\-\\<"));
+        assertThat(pattern(asList("¯\\_(ツ)_/¯")).toString(), is("¯\\\\_\\(ツ\\)_/¯"));
+        assertThat(pattern(asList("*Opens and")).toString(), is("\\*Opens and"));
     }
 
     @Test
-    public void compressTest_withRandomStrings() {
+    public void pattern_withRandomStrings() {
         List<String> words = Arrays.asList("abandon", "adventure", "ahoy", "anchor", "armada",
                 "arms", "asea", "ashore", "assault", "attack", "aye-aye", "bad", "bandanna", "bandit",
                 "bandolier", "barbaric", "barrel", "battle", "beach", "behead", "boatswain", "bos'n",
@@ -125,7 +147,7 @@ public class RegexCompressorTest {
                 "vandalize", "vanquish", "vessel", "vicious", "vile", "villain", "violence", "violent",
                 "walk the plank", "weapons", "X marks the spot", "yellow fever", "yo-ho-ho");
 
-        String regexString = compress(words);
+        String regexString = pattern(words).toString();
 
         assertThat(regexString, is("a(?:bandon|dventure|hoy|nchor|rm(?:ada|s)|s(?:ea|hore|sault)|ttack|ye\\-aye)|b(?:" +
                 "a(?:d|nd(?:anna|it|olier)|r(?:baric|rel)|ttle)|e(?:ach|head)|o(?:atswain|s'n|unty)|r(?:awl|utal)|ucc" +
