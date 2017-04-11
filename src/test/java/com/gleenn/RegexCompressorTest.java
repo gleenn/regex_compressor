@@ -80,6 +80,13 @@ public class RegexCompressorTest {
     }
 
     @Test
+    public void pattern_withCaseInsensitive() {
+        final Options options = Options.defaultOptions().caseSensitive(false);
+        assertThat(pattern(asList("a"), options).matcher("a").find(), is(true));
+        assertThat(pattern(asList("a"), options).matcher("A").find(), is(true));
+    }
+
+    @Test
     public void escapeTest() {
         assertThat(escape('('), is("\\("));
         assertThat(escape(')'), is("\\)"));

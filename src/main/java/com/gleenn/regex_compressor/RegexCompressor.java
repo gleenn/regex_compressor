@@ -26,7 +26,9 @@ public final class RegexCompressor {
             trie.addWord(string);
         }
 
-        StringBuilder result = new StringBuilder(options.getPrefix());
+        StringBuilder result = new StringBuilder();
+        if(!options.isCaseSensitive()) result.append("(?i)");
+        result.append(options.getPrefix());
         buildRegex(trie, result);
         result.append(options.getSuffix());
         return result.toString();
