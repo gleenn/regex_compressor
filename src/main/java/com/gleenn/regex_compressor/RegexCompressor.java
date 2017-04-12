@@ -27,10 +27,18 @@ public final class RegexCompressor {
         }
 
         StringBuilder result = new StringBuilder();
+
         if(!options.isCaseSensitive()) result.append("(?i)");
-        result.append(options.getPrefix());
+
+        boolean prefixOrSuffixPresent = options.getPrefix() != null || options.getSuffix() != null;
+
+        if(options.getPrefix() != null) result.append(options.getPrefix());
+        if(prefixOrSuffixPresent) result.append("(?:");
+
         buildRegex(trie, result);
-        result.append(options.getSuffix());
+
+        if(prefixOrSuffixPresent) result.append(")");
+        if(options.getSuffix() != null) result.append(options.getSuffix());
         return result.toString();
     }
 

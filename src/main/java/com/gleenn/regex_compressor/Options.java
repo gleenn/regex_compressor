@@ -2,8 +2,8 @@ package com.gleenn.regex_compressor;
 
 public final class Options {
     private boolean caseSensitive = true;
-    private String prefix = "";
-    private String suffix = "";
+    private String prefix = null;
+    private String suffix = null;
 
     public Options() { }
 
