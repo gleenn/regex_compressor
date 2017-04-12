@@ -6,6 +6,7 @@ import com.gleenn.regex_compressor.Trie;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import org.testng.annotations.Test;
 
@@ -68,6 +69,30 @@ public class RegexCompressorTest {
         final Options options = Options.defaultOptions().suffix("X");
         assertThat(pattern(asList("a"), options).matcher("aX").find(), is(true));
         assertThat(pattern(asList("a"), options).matcher("aZ").find(), is(false));
+    }
+
+    @Test
+    public void pattern_withPrefixSet_addsParensToEnsurePrefixIsMatched() {
+        final Options options = Options.defaultOptions().prefix("X");
+        Pattern pattern = pattern(asList("az", "b"), options);
+
+        assertThat(pattern.toString(), containsString("|"));
+        assertThat(pattern.matcher("Xaz").find(), is(true));
+        assertThat(pattern.matcher("Xb").find(), is(true));
+        assertThat(pattern.matcher("az").find(), is(false));
+        assertThat(pattern.matcher("b").find(), is(false));
+    }
+
+    @Test
+    public void pattern_withSuffixSet_addsParensToEnsureSuffixIsMatched() {
+        final Options options = Options.defaultOptions().suffix("X");
+        Pattern pattern = pattern(asList("a", "zb"), options);
+
+        assertThat(pattern.toString(), containsString("|"));
+        assertThat(pattern.matcher("aX").find(), is(true));
+        assertThat(pattern.matcher("zbX").find(), is(true));
+        assertThat(pattern.matcher("zb").find(), is(false));
+        assertThat(pattern.matcher("a").find(), is(false));
     }
 
     @Test
