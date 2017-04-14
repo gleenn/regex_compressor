@@ -5,7 +5,9 @@ import static com.gleenn.regex_compressor.Trie.hasNoChildren;
 import static com.gleenn.regex_compressor.Trie.hasOnlyChild;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import org.testng.annotations.Test;
 
 public class TrieTest {
@@ -63,6 +65,17 @@ public class TrieTest {
         Trie bFirst = new Trie();
         bFirst.addWord("b").addWord("a");
         assertThat(aFirst.equals(bFirst), is(false));
+
+        Trie root1 = new Trie();
+        root1.addWord("a").addWord("b").addWord("c");
+        Trie root2 = new Trie();
+        root2.addWord("a").addWord("b").addWord("c");
+        assertThat(root1, equalTo(root2));
+        assertThat(root2, equalTo(root1));
+
+        root1.getChildren().get('a').getChildren().get('b').addWord("d");
+        assertThat(root1, not(equalTo(root2)));
+        assertThat(root2, not(equalTo(root1)));
     }
 
     @Test
