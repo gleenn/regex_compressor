@@ -20,12 +20,16 @@ public final class RegexCompressor {
 
     private static String compress(final List<String> strings, final Options options) {
         if(strings.isEmpty()) return REGEX_THAT_MATCHES_NOTHING;
+        Trie trie = buildSimplifiedTrie(strings);
+        return buildRegex(trie, options);
+    }
 
-        Trie trie = new Trie();
-        for(String string : strings) {
-            trie.addWord(string);
-        }
+    private static Trie buildSimplifiedTrie(final List<String> strings) {
+        Trie prefixTrie = buildPrefixTrie(strings);
+        return prefixTrie;
+    }
 
+    private static String buildRegex(final Trie trie, final Options options) {
         StringBuilder result = new StringBuilder();
 
         if(!options.isCaseSensitive()) result.append("(?i)");
@@ -40,6 +44,14 @@ public final class RegexCompressor {
         if(prefixOrSuffixPresent) result.append(")");
         if(options.getSuffix() != null) result.append(options.getSuffix());
         return result.toString();
+    }
+
+    private static Trie buildPrefixTrie(List<String> strings) {
+        Trie trie = new Trie();
+        for(String string : strings) {
+            trie.addWord(string);
+        }
+        return trie;
     }
 
     public static void buildRegex(final Trie trie, final StringBuilder result) {
