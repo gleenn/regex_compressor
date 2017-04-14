@@ -53,7 +53,7 @@ public class Trie {
         return addWord(this, word);
     }
 
-    public static Trie addWord(Trie parent, String word) {
+    private static Trie addWord(Trie parent, String word) {
         int wordLength = word.length();
         if(wordLength == 0) return parent;
 
