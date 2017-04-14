@@ -31,12 +31,12 @@ public class TrieTest {
         Trie root = new Trie();
         root.addWord("abcd");
         root.addWord("a");
-        assertThat(root.getChildren().get('a').isTerminal(), is(true));
+        assertThat(root.get('a').isTerminal(), is(true));
 
         Trie rootBackwards = new Trie();
         rootBackwards.addWord("a");
         rootBackwards.addWord("abcd");
-        assertThat(rootBackwards.getChildren().get('a').isTerminal(), is(true));
+        assertThat(rootBackwards.get('a').isTerminal(), is(true));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TrieTest {
     public void constructorTest_withList() {
         Trie trie = new Trie('a', false, asList('b'));
         assertThat(trie.isTerminal(), is(false));
-        assertThat(trie.getChildren().get('b').isTerminal(), is(true));
+        assertThat(trie.get('b').isTerminal(), is(true));
     }
 
     @Test
@@ -68,7 +68,6 @@ public class TrieTest {
         trie.addWord("a");
         trie.addWord("bc");
         assertThat(trie.get('b').get('c').isTerminal(), is(true));
-        assertThat(trie.get('b').get('c').getChildren().size(), is(0));
     }
 
     @Test
@@ -89,7 +88,7 @@ public class TrieTest {
         assertThat(root1, equalTo(root2));
         assertThat(root2, equalTo(root1));
 
-        root1.getChildren().get('a').getChildren().get('b').addWord("d");
+        root1.get('a').get('b').addWord("d");
         assertThat(root1, not(equalTo(root2)));
         assertThat(root2, not(equalTo(root1)));
     }

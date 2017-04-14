@@ -7,7 +7,7 @@ import java.util.List;
 public class Trie {
     final Character character;
     boolean terminal;
-    final LinkedHashMap<Character, Trie> children;
+    final private LinkedHashMap<Character, Trie> children;
 
     public Character getCharacter() {
         return character;
