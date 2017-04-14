@@ -55,11 +55,11 @@ public class Trie {
 
     public static Trie addWord(Trie parent, String word) {
         int wordLength = word.length();
-        if (wordLength == 0) return parent;
+        if(wordLength == 0) return parent;
 
         char c = word.charAt(0);
         Trie insertionNode = parent.children.get(c);
-        if (insertionNode == null) {
+        if(insertionNode == null) {
             insertionNode = new Trie(c, wordLength == 1);
             parent.children.put(c, insertionNode);
         } else if(wordLength == 1) {
@@ -99,13 +99,13 @@ public class Trie {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
 
         Trie node = (Trie) o;
 
-        if (terminal != node.terminal) return false;
-        if (character != null ? !character.equals(node.character) : node.character != null) return false;
+        if(terminal != node.terminal) return false;
+        if(character != null ? !character.equals(node.character) : node.character != null) return false;
         return children.equals(node.children);
     }
 
@@ -124,7 +124,8 @@ public class Trie {
     private boolean contains(final Trie trie, final String word) {
         final Trie child;
         switch(word.length()) {
-            case 0: return false;
+            case 0:
+                return false;
             case 1:
                 child = trie.children.get(word.charAt(0));
                 return child != null && child.isTerminal();
