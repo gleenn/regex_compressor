@@ -69,6 +69,26 @@ public class Trie {
         return addWord(insertionNode, word.substring(1));
     }
 
+    public Trie addReverseWord(final String word) {
+        return addReverseWord(this, word);
+    }
+
+    private Trie addReverseWord(final Trie parent, final String word) {
+        int wordLength = word.length();
+        if(wordLength == 0) return parent;
+
+        char c = word.charAt(wordLength-1);
+        Trie insertionNode = parent.children.get(c);
+        if(insertionNode == null) {
+            insertionNode = new Trie(c, wordLength == 1);
+            parent.children.put(c, insertionNode);
+        } else if(wordLength == 1) {
+            insertionNode.terminal = true;
+            return insertionNode;
+        }
+        return addReverseWord(insertionNode, word.substring(0, wordLength-1));
+    }
+
     public Trie get(Character c) {
         return children.get(c);
     }

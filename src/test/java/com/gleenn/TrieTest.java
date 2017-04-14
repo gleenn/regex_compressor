@@ -40,6 +40,13 @@ public class TrieTest {
     }
 
     @Test
+    public void addReverseWord_reversesStringBeforeAddingToTrie() {
+        Trie root = new Trie();
+        root.addReverseWord("cat");
+        assertThat(root.contains("tac"), is(true));
+    }
+
+    @Test
     public void contains_returnsTrueWhenTrieContainsWord() {
         Trie root = new Trie();
         assertThat(root.contains("dog"), is(false));
