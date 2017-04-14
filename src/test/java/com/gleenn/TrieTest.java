@@ -40,6 +40,15 @@ public class TrieTest {
     }
 
     @Test
+    public void contains_returnsTrueWhenTrieContainsWord() {
+        Trie root = new Trie();
+        assertThat(root.contains("dog"), is(false));
+        root.addWord("dog");
+        assertThat(root.contains("dog"), is(true));
+        assertThat(root.contains("cat"), is(false));
+    }
+
+    @Test
     public void constructorTest_withList() {
         Trie trie = new Trie('a', false, asList('b'));
         assertThat(trie.isTerminal(), is(false));

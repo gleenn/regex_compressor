@@ -35,7 +35,7 @@ public class Trie {
         this.children = new LinkedHashMap<>();
 
         if(childrenCharacters == null) return;
-        for (Character child : childrenCharacters) {
+        for(Character child : childrenCharacters) {
             this.children.put(child, new Trie(child, true));
         }
     }
@@ -62,7 +62,7 @@ public class Trie {
         if (insertionNode == null) {
             insertionNode = new Trie(c, wordLength == 1);
             parent.children.put(c, insertionNode);
-        } else if (wordLength == 1) {
+        } else if(wordLength == 1) {
             insertionNode.terminal = true;
             return insertionNode;
         }
@@ -93,7 +93,9 @@ public class Trie {
         return trie.getChildren().size() == 0;
     }
 
-    public static boolean isTerminal(Trie trie) { return trie.isTerminal(); }
+    public static boolean isTerminal(Trie trie) {
+        return trie.isTerminal();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -113,5 +115,22 @@ public class Trie {
         result = 31 * result + (terminal ? 1 : 0);
         result = 31 * result + children.hashCode();
         return result;
+    }
+
+    public boolean contains(final String word) {
+        return contains(this, word);
+    }
+
+    private boolean contains(final Trie trie, final String word) {
+        final Trie child;
+        switch(word.length()) {
+            case 0: return false;
+            case 1:
+                child = trie.children.get(word.charAt(0));
+                return child != null && child.isTerminal();
+            default:
+                child = trie.children.get(word.charAt(0));
+                return child != null && contains(child, word.substring(1));
+        }
     }
 }
