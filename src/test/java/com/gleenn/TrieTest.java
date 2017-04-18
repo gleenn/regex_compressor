@@ -63,7 +63,7 @@ public class TrieTest {
     }
 
     @Test
-    public void getTest_returnsSubTrieMatchingCharacter() {
+    public void get_returnsSubTrieMatchingCharacter() {
         Trie trie = new Trie();
         trie.addWord("a");
         trie.addWord("bc");

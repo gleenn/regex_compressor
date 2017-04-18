@@ -1,6 +1,7 @@
 package com.gleenn.regex_compressor;
 
 import static com.gleenn.regex_compressor.Trie.*;
+import static com.gleenn.regex_compressor.TrieSimplifier.buildSimplifiedTrie;
 import static java.util.regex.Pattern.compile;
 
 import java.util.LinkedHashMap;
@@ -24,11 +25,6 @@ public final class RegexCompressor {
         return buildRegex(trie, options);
     }
 
-    private static Trie buildSimplifiedTrie(final List<String> strings) {
-        Trie prefixTrie = buildPrefixTrie(strings);
-        return prefixTrie;
-    }
-
     private static String buildRegex(final Trie trie, final Options options) {
         StringBuilder result = new StringBuilder();
 
@@ -44,14 +40,6 @@ public final class RegexCompressor {
         if(prefixOrSuffixPresent) result.append(")");
         if(options.getSuffix() != null) result.append(options.getSuffix());
         return result.toString();
-    }
-
-    private static Trie buildPrefixTrie(List<String> strings) {
-        Trie trie = new Trie();
-        for(String string : strings) {
-            trie.addWord(string);
-        }
-        return trie;
     }
 
     public static void buildRegex(final Trie trie, final StringBuilder result) {

@@ -89,6 +89,22 @@ public class Trie {
         return addReverseWord(insertionNode, word.substring(0, wordLength-1));
     }
 
+    public static Trie buildPrefixTrie(List<String> strings) {
+        Trie trie = new Trie();
+        for(String string : strings) {
+            trie.addWord(string);
+        }
+        return trie;
+    }
+
+    public static Trie buildSuffixTrie(List<String> strings) {
+        Trie trie = new Trie();
+        for(String string : strings) {
+            trie.addReverseWord(string);
+        }
+        return trie;
+    }
+
     public Trie get(Character c) {
         return children.get(c);
     }
