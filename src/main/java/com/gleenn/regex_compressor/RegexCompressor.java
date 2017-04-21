@@ -6,6 +6,7 @@ import static java.util.regex.Pattern.compile;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class RegexCompressor {
     private static final String REGEX_THAT_MATCHES_NOTHING = "(?!.*)";
@@ -18,9 +19,11 @@ public final class RegexCompressor {
         return compile(compress(strings, options));
     }
 
-    private static String compress(final List<String> strings, final Options options) {
+    private static String compress(List<String> strings, final Options options) {
         if(strings.isEmpty()) return REGEX_THAT_MATCHES_NOTHING;
-        Trie trie = buildPrefixTrie(strings);
+        Trie trie = buildPrefixTrie(options.isCaseSensitive() ?
+                strings :
+                strings.stream().map(String::toLowerCase).collect(Collectors.toList()));
         return buildRegex(trie, options);
     }
 

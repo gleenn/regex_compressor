@@ -109,6 +109,7 @@ public class RegexCompressorTest {
         final Options options = Options.defaultOptions().caseSensitive(false);
         assertThat(pattern(asList("a"), options).matcher("a").find(), is(true));
         assertThat(pattern(asList("a"), options).matcher("A").find(), is(true));
+        assertThat(pattern(asList("a", "A"), options).toString(), is("(?i)a"));
     }
 
     @Test
