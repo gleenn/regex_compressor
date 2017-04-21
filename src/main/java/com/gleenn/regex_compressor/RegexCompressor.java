@@ -1,7 +1,6 @@
 package com.gleenn.regex_compressor;
 
 import static com.gleenn.regex_compressor.Trie.*;
-import static com.gleenn.regex_compressor.TrieSimplifier.buildSimplifiedTrie;
 import static java.util.regex.Pattern.compile;
 
 import java.util.LinkedHashMap;
@@ -21,7 +20,7 @@ public final class RegexCompressor {
 
     private static String compress(final List<String> strings, final Options options) {
         if(strings.isEmpty()) return REGEX_THAT_MATCHES_NOTHING;
-        Trie trie = buildSimplifiedTrie(strings);
+        Trie trie = buildPrefixTrie(strings);
         return buildRegex(trie, options);
     }
 
