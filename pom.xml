@@ -92,5 +92,10 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.re2j</groupId>
+            <artifactId>re2j</artifactId>
+            <version>1.1</version>
+        </dependency>
     </dependencies>
 </project>

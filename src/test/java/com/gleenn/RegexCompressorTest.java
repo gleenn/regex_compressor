@@ -15,6 +15,36 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class RegexCompressorTest {
+    private final static List<String> PIRATE_WORDS = Arrays.asList("abandon", "adventure", "ahoy", "anchor", "armada",
+            "arms", "asea", "ashore", "assault", "attack", "aye-aye", "bad", "bandanna", "bandit",
+            "bandolier", "barbaric", "barrel", "battle", "beach", "behead", "boatswain", "bos'n",
+            "bounty", "brawl", "brutal", "buccaneer", "cannon", "capsize", "captain", "capture",
+            "cargo", "cave", "challenge", "chest", "coast", "coastline", "coins", "compass",
+            "confiscate", "conquest", "contraband", "corpse", "corsair", "course", "crew", "criminal",
+            "crook", "crow's nest", "cruel", "curse", "cutlass", "cutthroat", "dagger", "danger",
+            "daring", "dead reckoning", "deck", "deck hands", "desert island", "dishonest",
+            "doubloon", "earring", "escape", "evil", "explore", "eye patch", "fear", "fearsome",
+            "ferocious", "fight", "first mate", "flag", "fleet", "flotsam and jetsam", "fortune",
+            "galleon", "gangplank", "gear", "gibbet", "gold", "greed", "gun", "gunner", "gunpowder",
+            "haul", "heist", "high seas", "hijack", "hook", "hold", "horizon", "hostile", "hull",
+            "hurricane", "illegal", "ill-gotten", "infamous", "island", "jetsam", "jewels",
+            "Jolly Roger", "keel", "keelhaul", "kidnap", "kill", "knife", "land", "land-ho",
+            "landlubber", "lash", "lawless", "legend", "limey", "Long John Silver", "lookout",
+            "loot", "lore", "lucre", "maggot", "malaria", "map", "marauder", "matiner", "maroon",
+            "mast", "mates", "mayhem", "menace", "merchant", "musket", "mutiny", "nautical",
+            "navigate", "New World", "notorious", "ocean", "old salt", "Old World", "outcasts",
+            "overboard", "parley", "parrot", "pegleg", "pieces of eight", "pillage", "pirate",
+            "pistol", "plank", "plunder", "predatory", "privateer", "prowl", "quartermaster",
+            "quarters", "quest", "raid", "ransack", "rat", "rations", "realm", "reckoning",
+            "revenge", "revolt", "riches", "rigging", "roam", "rob", "robber", "rope", "rudder",
+            "ruffian", "rum", "ruthless", "sabotage", "sail", "sailing", "sailor", "scalawag",
+            "scar", "scurvy", "seas", "seaweed", "sextant", "ship", "shipmate", "shiver-me-timbers",
+            "shore", "silver", "skiff", "skull and bones", "spoils", "steal", "swab the deck",
+            "swagger", "swashbuckling", "sword", "thief", "thievery", "thug", "tides", "torture",
+            "trade", "treachery", "treasure", "treasure island", "truce", "unlawful", "unscrupulous",
+            "vandalize", "vanquish", "vessel", "vicious", "vile", "villain", "violence", "violent",
+            "walk the plank", "weapons", "X marks the spot", "yellow fever", "yo-ho-ho");
+
     @Test
     public void pattern_basic() {
         assertThat(pattern(asList("a")).toString(), is("a"));
@@ -45,6 +75,22 @@ public class RegexCompressorTest {
     @Test
     public void pattern_withUnicodeChars() {
         assertThat(pattern(asList("☺")).matcher("☺").find(), is(true));
+    }
+
+    @Test
+    public void patternRE2_basic() {
+        assertThat(patternRE2(asList("a")).matcher("a").find(), is(true));
+        assertThat(patternRE2(asList("foo", "bar", "baz", "quux")).matcher("quux").find(), is(true));
+
+        Options options = Options.defaultOptions().withWordBoundaries();
+        assertThat(pattern(asList("a"), options).matcher("ab").find(), is(false));
+        assertThat(pattern(asList("a"), options).matcher("ba").find(), is(false));
+        assertThat(pattern(asList("a"), options).matcher("bab").find(), is(false));
+
+        com.google.re2j.Pattern pattern = patternRE2(PIRATE_WORDS);
+        for(String word : PIRATE_WORDS) {
+            assertThat("Regex should match " + word, pattern.matcher(word).find(), is(true));
+        }
     }
 
     @Test
@@ -150,37 +196,7 @@ public class RegexCompressorTest {
 
     @Test
     public void pattern_withRandomStrings() {
-        List<String> words = Arrays.asList("abandon", "adventure", "ahoy", "anchor", "armada",
-                "arms", "asea", "ashore", "assault", "attack", "aye-aye", "bad", "bandanna", "bandit",
-                "bandolier", "barbaric", "barrel", "battle", "beach", "behead", "boatswain", "bos'n",
-                "bounty", "brawl", "brutal", "buccaneer", "cannon", "capsize", "captain", "capture",
-                "cargo", "cave", "challenge", "chest", "coast", "coastline", "coins", "compass",
-                "confiscate", "conquest", "contraband", "corpse", "corsair", "course", "crew", "criminal",
-                "crook", "crow's nest", "cruel", "curse", "cutlass", "cutthroat", "dagger", "danger",
-                "daring", "dead reckoning", "deck", "deck hands", "desert island", "dishonest",
-                "doubloon", "earring", "escape", "evil", "explore", "eye patch", "fear", "fearsome",
-                "ferocious", "fight", "first mate", "flag", "fleet", "flotsam and jetsam", "fortune",
-                "galleon", "gangplank", "gear", "gibbet", "gold", "greed", "gun", "gunner", "gunpowder",
-                "haul", "heist", "high seas", "hijack", "hook", "hold", "horizon", "hostile", "hull",
-                "hurricane", "illegal", "ill-gotten", "infamous", "island", "jetsam", "jewels",
-                "Jolly Roger", "keel", "keelhaul", "kidnap", "kill", "knife", "land", "land-ho",
-                "landlubber", "lash", "lawless", "legend", "limey", "Long John Silver", "lookout",
-                "loot", "lore", "lucre", "maggot", "malaria", "map", "marauder", "matiner", "maroon",
-                "mast", "mates", "mayhem", "menace", "merchant", "musket", "mutiny", "nautical",
-                "navigate", "New World", "notorious", "ocean", "old salt", "Old World", "outcasts",
-                "overboard", "parley", "parrot", "pegleg", "pieces of eight", "pillage", "pirate",
-                "pistol", "plank", "plunder", "predatory", "privateer", "prowl", "quartermaster",
-                "quarters", "quest", "raid", "ransack", "rat", "rations", "realm", "reckoning",
-                "revenge", "revolt", "riches", "rigging", "roam", "rob", "robber", "rope", "rudder",
-                "ruffian", "rum", "ruthless", "sabotage", "sail", "sailing", "sailor", "scalawag",
-                "scar", "scurvy", "seas", "seaweed", "sextant", "ship", "shipmate", "shiver-me-timbers",
-                "shore", "silver", "skiff", "skull and bones", "spoils", "steal", "swab the deck",
-                "swagger", "swashbuckling", "sword", "thief", "thievery", "thug", "tides", "torture",
-                "trade", "treachery", "treasure", "treasure island", "truce", "unlawful", "unscrupulous",
-                "vandalize", "vanquish", "vessel", "vicious", "vile", "villain", "violence", "violent",
-                "walk the plank", "weapons", "X marks the spot", "yellow fever", "yo-ho-ho");
-
-        String regexString = pattern(words).toString();
+        String regexString = pattern(PIRATE_WORDS).toString();
 
         assertThat(regexString, is("a(?:bandon|dventure|hoy|nchor|rm(?:ada|s)|s(?:ea|hore|sault)|ttack|ye\\-aye)|b(?:" +
                 "a(?:d|nd(?:anna|it|olier)|r(?:baric|rel)|ttle)|e(?:ach|head)|o(?:atswain|s'n|unty)|r(?:awl|utal)|ucc" +
@@ -203,7 +219,7 @@ public class RegexCompressorTest {
                 "r|o\\-ho\\-ho)"));
 
         Pattern pattern = Pattern.compile(regexString);
-        for(String word : words) {
+        for(String word : PIRATE_WORDS) {
             assertThat("Regex should match " + word, pattern.matcher(word).find(), is(true));
         }
     }

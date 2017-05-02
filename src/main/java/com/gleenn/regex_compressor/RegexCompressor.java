@@ -19,6 +19,14 @@ public final class RegexCompressor {
         return compile(compress(strings, options));
     }
 
+    public static com.google.re2j.Pattern patternRE2(List<String> strings) {
+        return com.google.re2j.Pattern.compile(compress(strings, Options.defaultOptions()));
+    }
+
+    public static com.google.re2j.Pattern patternRE2(final List<String> strings, final Options options) {
+        return com.google.re2j.Pattern.compile(compress(strings, options));
+    }
+
     private static String compress(List<String> strings, final Options options) {
         if(strings.isEmpty()) return REGEX_THAT_MATCHES_NOTHING;
         Trie trie = buildPrefixTrie(options.isCaseSensitive() ?
