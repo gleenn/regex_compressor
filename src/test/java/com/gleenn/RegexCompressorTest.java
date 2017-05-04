@@ -49,6 +49,7 @@ public class RegexCompressorTest {
     public void pattern_basic() {
         assertThat(pattern(asList("a")).toString(), is("a"));
         assertThat(pattern(asList("a", "b")).toString(), is("[ab]"));
+        assertThat(pattern(asList("a", "b", "ac")).toString(), is("ac?|b"));
         assertThat(pattern(asList("a", "b", "c")).toString(), is("[abc]"));
         assertThat(pattern(asList("a", "bc")).toString(), is("a|bc"));
         assertThat(pattern(asList("abcd", "a")).toString(), is("a(?:bcd)?"));
