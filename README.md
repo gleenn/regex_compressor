@@ -12,6 +12,8 @@ Regex Compressor is a Java library intended to take a list of strings and genera
 `compress(asList("aaaab", "aaaac", "aaaad", "aaaae"))` => `"aaaa[bcde]"`
 `compress(asList("foo", "bar", "baz"))` => `"foo|ba[rz]"`
 
+Use the `pattern` method instead of `compress` to generate a Java Pattern directly.
+
 ## Notes
 
 This should have improved regex performance on large numbers of strings. It uses a trie data structure to compress common prefixes.
