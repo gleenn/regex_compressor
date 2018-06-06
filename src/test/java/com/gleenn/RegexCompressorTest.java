@@ -57,6 +57,9 @@ public class RegexCompressorTest {
         assertThat(pattern(asList("a", "b", "ab", "abc")).toString(), is("a(?:bc?)?|b"));
         assertThat(pattern(asList("foo", "bar", "baz")).toString(), is("foo|ba[rz]"));
         assertThat(pattern(asList("foo", "bar", "baz", "quux")).toString(), is("foo|ba[rz]|quux"));
+
+        assertThat(pattern(asList("aaaab", "aaaac", "aaaad", "aaaae")).toString(), is("aaaa[bcde]"));
+
     }
 
     @Test
@@ -69,8 +72,15 @@ public class RegexCompressorTest {
 
     @Test
     public void pattern_whenGivenEmptyList_returnsRegexThatMatchesNothing() {
-        assertThat(pattern(asList()).toString(), is("(?!.*)"));
-        assertThat(pattern(asList(), Options.defaultOptions().withWordBoundaries()).toString(), is("(?!.*)"));
+        Pattern pattern = pattern(asList(), Options.defaultOptions().withWordBoundaries());
+        assertThat(pattern.toString(), is("(?!.)"));
+
+        assertThat(pattern.matcher("").matches(), is(true));
+        assertThat(pattern.matcher("a").matches(), is(false));
+        assertThat(pattern.matcher("aa").matches(), is(false));
+        assertThat(pattern.matcher("aaa").matches(), is(false));
+
+        assertThat(pattern(asList(), Options.defaultOptions().withWordBoundaries()).toString(), is("(?!.)"));
     }
 
     @Test

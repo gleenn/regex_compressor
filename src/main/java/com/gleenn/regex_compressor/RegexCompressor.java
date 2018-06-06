@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class RegexCompressor {
-    private static final String REGEX_THAT_MATCHES_NOTHING = "(?!.*)";
+    private static final String REGEX_THAT_MATCHES_NOTHING = "(?!.)";
 
     public static Pattern pattern(List<String> strings) {
         return compile(compress(strings, Options.defaultOptions()));
