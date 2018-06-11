@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class TrieImpl implements Trie {
+public class SimpleTrie implements Trie {
     final private Character character;
     private boolean terminal;
     final private LinkedHashMap<Character, Trie> children;
@@ -26,26 +26,26 @@ public class TrieImpl implements Trie {
         this.terminal = terminal;
     }
 
-    public TrieImpl() {
+    public SimpleTrie() {
         this(null, false);
     }
 
-    public TrieImpl(Character character, boolean terminal) {
+    public SimpleTrie(Character character, boolean terminal) {
         this(character, terminal, new LinkedHashMap<>());
     }
 
-    public TrieImpl(Character character, boolean terminal, List<Character> childrenCharacters) {
+    public SimpleTrie(Character character, boolean terminal, List<Character> childrenCharacters) {
         this.character = character;
         this.terminal = terminal;
         this.children = new LinkedHashMap<>();
 
         if(childrenCharacters == null) return;
         for(Character child : childrenCharacters) {
-            this.children.put(child, new TrieImpl(child, true));
+            this.children.put(child, new SimpleTrie(child, true));
         }
     }
 
-    public TrieImpl(Character character, boolean terminal, LinkedHashMap<Character, Trie> children) {
+    public SimpleTrie(Character character, boolean terminal, LinkedHashMap<Character, Trie> children) {
         if(children == null) {
             throw new RuntimeException("Children cannot be null");
         }
@@ -65,7 +65,7 @@ public class TrieImpl implements Trie {
         char c = word.charAt(0);
         Trie insertionNode = parent.getChildren().get(c);
         if(insertionNode == null) {
-            insertionNode = new TrieImpl(c, wordLength == 1);
+            insertionNode = new SimpleTrie(c, wordLength == 1);
             parent.getChildren().put(c, insertionNode);
         } else if(wordLength == 1) {
             insertionNode.setTerminal(true);
@@ -85,7 +85,7 @@ public class TrieImpl implements Trie {
         char c = word.charAt(wordLength-1);
         Trie insertionNode = parent.getChildren().get(c);
         if(insertionNode == null) {
-            insertionNode = new TrieImpl(c, wordLength == 1);
+            insertionNode = new SimpleTrie(c, wordLength == 1);
             parent.getChildren().put(c, insertionNode);
         } else if(wordLength == 1) {
             insertionNode.setTerminal(true);
@@ -95,7 +95,7 @@ public class TrieImpl implements Trie {
     }
 
     public static Trie buildPrefixTrie(List<String> strings) {
-        Trie trie = new TrieImpl();
+        Trie trie = new SimpleTrie();
         for(String string : strings) {
             trie.addWord(string);
         }
@@ -103,7 +103,7 @@ public class TrieImpl implements Trie {
     }
 
     public static Trie buildSuffixTrie(List<String> strings) {
-        Trie trie = new TrieImpl();
+        Trie trie = new SimpleTrie();
         for(String string : strings) {
             trie.addReverseWord(string);
         }

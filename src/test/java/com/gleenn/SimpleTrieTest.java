@@ -1,18 +1,18 @@
 package com.gleenn;
 
 import com.gleenn.regex_compressor.Trie;
-import static com.gleenn.regex_compressor.TrieImpl.hasNoChildren;
-import static com.gleenn.regex_compressor.TrieImpl.hasOnlyChild;
-import com.gleenn.regex_compressor.TrieImpl;
+import static com.gleenn.regex_compressor.SimpleTrie.hasNoChildren;
+import static com.gleenn.regex_compressor.SimpleTrie.hasOnlyChild;
+import com.gleenn.regex_compressor.SimpleTrie;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import org.testng.annotations.Test;
 
-public class TrieImplTest {
+public class SimpleTrieTest {
     @Test
     public void addWordTest_setsTerminalPropertyCorrectly() {
-        Trie root = new TrieImpl();
+        Trie root = new SimpleTrie();
         assertThat(root.isTerminal(), is(false));
 
         Trie trieA = root.addWord("a");
@@ -27,12 +27,12 @@ public class TrieImplTest {
 
     @Test
     public void addWordTest_setsTerminalPropertyCorrectly_evenWithShorterOverlapper() {
-        Trie root = new TrieImpl();
+        Trie root = new SimpleTrie();
         root.addWord("abcd");
         root.addWord("a");
         assertThat(root.get('a').isTerminal(), is(true));
 
-        TrieImpl rootBackwards = new TrieImpl();
+        SimpleTrie rootBackwards = new SimpleTrie();
         rootBackwards.addWord("a");
         rootBackwards.addWord("abcd");
         assertThat(rootBackwards.get('a').isTerminal(), is(true));
@@ -40,14 +40,14 @@ public class TrieImplTest {
 
     @Test
     public void addReverseWord_reversesStringBeforeAddingToTrie() {
-        Trie root = new TrieImpl();
+        Trie root = new SimpleTrie();
         root.addReverseWord("cat");
         assertThat(root.contains("tac"), is(true));
     }
 
     @Test
     public void contains_returnsTrueWhenTrieContainsWord() {
-        Trie root = new TrieImpl();
+        Trie root = new SimpleTrie();
         assertThat(root.contains("dog"), is(false));
         root.addWord("dog");
         assertThat(root.contains("dog"), is(true));
@@ -56,14 +56,14 @@ public class TrieImplTest {
 
     @Test
     public void constructorTest_withList() {
-        Trie trie = new TrieImpl('a', false, asList('b'));
+        Trie trie = new SimpleTrie('a', false, asList('b'));
         assertThat(trie.isTerminal(), is(false));
         assertThat(trie.get('b').isTerminal(), is(true));
     }
 
     @Test
     public void get_returnsSubTrieMatchingCharacter() {
-        Trie trie = new TrieImpl();
+        Trie trie = new SimpleTrie();
         trie.addWord("a");
         trie.addWord("bc");
         assertThat(trie.get('b').get('c').isTerminal(), is(true));
@@ -71,18 +71,18 @@ public class TrieImplTest {
 
     @Test
     public void equalsTest() {
-        assertThat(new TrieImpl().equals(new TrieImpl()), is(true));
-        assertThat(new TrieImpl().addWord("a").equals(new TrieImpl().addWord("a")), is(true));
+        assertThat(new SimpleTrie().equals(new SimpleTrie()), is(true));
+        assertThat(new SimpleTrie().addWord("a").equals(new SimpleTrie().addWord("a")), is(true));
 
-        TrieImpl aFirst = new TrieImpl();
+        SimpleTrie aFirst = new SimpleTrie();
         aFirst.addWord("a").addWord("b");
-        TrieImpl bFirst = new TrieImpl();
+        SimpleTrie bFirst = new SimpleTrie();
         bFirst.addWord("b").addWord("a");
         assertThat(aFirst.equals(bFirst), is(false));
 
-        TrieImpl root1 = new TrieImpl();
+        SimpleTrie root1 = new SimpleTrie();
         root1.addWord("a").addWord("b").addWord("c");
-        Trie root2 = new TrieImpl();
+        Trie root2 = new SimpleTrie();
         root2.addWord("a").addWord("b").addWord("c");
         assertThat(root1, equalTo(root2));
         assertThat(root2, equalTo(root1));
@@ -94,7 +94,7 @@ public class TrieImplTest {
 
     @Test
     public void hasOnlyChildTest() {
-        Trie trie = new TrieImpl();
+        Trie trie = new SimpleTrie();
         assertThat(hasOnlyChild(trie), is(false));
         trie.addWord("a");
         assertThat(hasOnlyChild(trie), is(true));
@@ -104,7 +104,7 @@ public class TrieImplTest {
 
     @Test
     public void hasNoChildrenTest() {
-        Trie trie = new TrieImpl();
+        Trie trie = new SimpleTrie();
         assertThat(hasNoChildren(trie), is(true));
         trie.addWord("a");
         assertThat(hasNoChildren(trie), is(false));

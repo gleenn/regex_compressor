@@ -2,7 +2,7 @@ package com.gleenn;
 
 import com.gleenn.regex_compressor.Options;
 import static com.gleenn.regex_compressor.RegexCompressor.*;
-import com.gleenn.regex_compressor.TrieImpl;
+import com.gleenn.regex_compressor.SimpleTrie;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -240,27 +240,27 @@ public class RegexCompressorTest {
         StringBuilder result;
 
         result = new StringBuilder();
-        buildRegex(new TrieImpl(null, true), result);
+        buildRegex(new SimpleTrie(null, true), result);
         assertThat(result.toString(), is(""));
 
         result = new StringBuilder();
-        buildRegex(new TrieImpl('a', true), result);
+        buildRegex(new SimpleTrie('a', true), result);
         assertThat(result.toString(), is("a"));
 
         result = new StringBuilder();
-        buildRegex(new TrieImpl('a', false, singletonList('b')), result);
+        buildRegex(new SimpleTrie('a', false, singletonList('b')), result);
         assertThat(result.toString(), is("ab"));
 
         result = new StringBuilder();
-        buildRegex(new TrieImpl('a', true, singletonList('b')), result);
+        buildRegex(new SimpleTrie('a', true, singletonList('b')), result);
         assertThat(result.toString(), is("ab?"));
 
         result = new StringBuilder();
-        buildRegex(new TrieImpl('a', false, asList('b', 'c')), result);
+        buildRegex(new SimpleTrie('a', false, asList('b', 'c')), result);
         assertThat(result.toString(), is("a[bc]"));
 
         result = new StringBuilder();
-        buildRegex(new TrieImpl('a', true, asList('b', 'c')), result);
+        buildRegex(new SimpleTrie('a', true, asList('b', 'c')), result);
         assertThat(result.toString(), is("a[bc]?"));
     }
 }

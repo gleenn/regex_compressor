@@ -1,6 +1,6 @@
 package com.gleenn.regex_compressor;
 
-import static com.gleenn.regex_compressor.TrieImpl.*;
+import static com.gleenn.regex_compressor.SimpleTrie.*;
 import static java.util.regex.Pattern.compile;
 
 import java.util.LinkedHashMap;
