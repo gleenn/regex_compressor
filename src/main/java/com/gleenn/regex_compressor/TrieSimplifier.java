@@ -1,7 +1,7 @@
 package com.gleenn.regex_compressor;
 
-import static com.gleenn.regex_compressor.Trie.buildPrefixTrie;
-import static com.gleenn.regex_compressor.Trie.buildSuffixTrie;
+import static com.gleenn.regex_compressor.TrieImpl.buildPrefixTrie;
+import static com.gleenn.regex_compressor.TrieImpl.buildSuffixTrie;
 
 import java.util.List;
 
