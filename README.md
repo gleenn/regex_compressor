@@ -28,7 +28,10 @@ Insertion order matters, it can affect the result of matches if you care about m
 
 - Use radix trees to improve performance when compressing long prefixes
 - Compress suffixes (although this is pretty non-trivial)
+- Use vistor pattern to not expose internals
 
 ## Related work
 
 This project is based on a Clojure implementation called [Frak](https://github.com/noprompt/frak).
+
+Radis tree implemented in Java by [thegedge](https://github.com/thegedge/radix-tree).
