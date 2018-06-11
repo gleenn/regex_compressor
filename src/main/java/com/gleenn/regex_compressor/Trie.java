@@ -5,8 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Trie {
-    final Character character;
-    boolean terminal;
+    final private Character character;
+    private boolean terminal;
     final private LinkedHashMap<Character, Trie> children;
 
     public Character getCharacter() {
