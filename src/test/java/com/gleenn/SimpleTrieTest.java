@@ -155,8 +155,17 @@ public class SimpleTrieTest {
         trie.addWord("c");
         assertThat(matchingPrefixes(trie, "c ab", true), is(singletonList("c")));
 
+        trie.addWord("c");
+        assertThat(matchingPrefixes(trie, "ca b", true), is(emptyList()));
 
-        // more fails when no word boundary present...
-        // matching new lines or bgrinning of string? \A vs ^
+        assertThat(matchingPrefixes(trie, "ab\n", true), is(singletonList("ab")));
+
+        trie = new SimpleTrie();
+        trie.addWord("a");
+        trie.addWord("a\nb");
+        trie.addWord("c");
+        assertThat(matchingPrefixes(trie, "a", true), is(singletonList("a")));
+        assertThat(matchingPrefixes(trie, "a\n", true), is(singletonList("a")));
+        assertThat(matchingPrefixes(trie, "\n", true), is(emptyList()));
     }
 }
