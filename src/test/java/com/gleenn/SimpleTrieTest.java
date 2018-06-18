@@ -116,7 +116,7 @@ public class SimpleTrieTest {
     }
 
     @Test
-    public void matchingPrefixesTest() {
+    public void matchingPrefixesTest_withoutEnforceWordBoundary() {
         Trie trie = new SimpleTrie();
 
         assertThat(matchingPrefixes(trie, ""), is(emptyList()));
@@ -132,5 +132,31 @@ public class SimpleTrieTest {
 
         trie.addWord("c");
         assertThat(matchingPrefixes(trie, "cab"), is(singletonList("c")));
+    }
+
+    @Test
+    public void matchingPrefixesTest_withEnforceWordBoundary() {
+        assertThat(SimpleTrie.wordBoundary.matcher("").find(), is(true));
+        assertThat(SimpleTrie.wordBoundary.matcher(" ").find(), is(true));
+
+        Trie trie = new SimpleTrie();
+
+        assertThat(matchingPrefixes(trie, "", true), is(emptyList()));
+        assertThat(matchingPrefixes(trie, "asdf", true), is(emptyList()));
+
+        trie.addWord("a");
+        assertThat(matchingPrefixes(trie, "a", true), is(singletonList("a")));
+        assertThat(matchingPrefixes(trie, "b", true), is(emptyList()));
+
+        trie.addWord("ab");
+        assertThat(matchingPrefixes(trie, "ab", true), is(singletonList("ab")));
+        assertThat(matchingPrefixes(trie, " ab", true), is(emptyList()));
+
+        trie.addWord("c");
+        assertThat(matchingPrefixes(trie, "c ab", true), is(singletonList("c")));
+
+
+        // more fails when no word boundary present...
+        // matching new lines or bgrinning of string? \A vs ^
     }
 }

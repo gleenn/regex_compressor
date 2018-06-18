@@ -160,18 +160,26 @@ public class SimpleTrie implements Trie {
     }
 
     public static List<String> matchingPrefixes(Trie trie, String input) {
-        return matchingPrefixes(trie, input, 0, new ArrayList<String>());
+        return matchingPrefixes(trie, input, 0, false, new ArrayList<String>());
     }
 
-    private static List<String> matchingPrefixes(Trie trie, String input, int offset, List<String> results) {
+    public static List<String> matchingPrefixes(Trie trie, String input, boolean enforceWordBoundary) {
+        return matchingPrefixes(trie, input, 0, enforceWordBoundary, new ArrayList<String>());
+    }
+
+    public final static Pattern wordBoundary = Pattern.compile("^\\W|^$");
+
+    private static List<String> matchingPrefixes(Trie trie, String input, int offset, boolean enforceWordBoundary, List<String> results) {
         if (offset >= input.length()) return results;
 
         Trie child = trie.get(input.charAt(offset));
         if (child == null) return results;
         if (child.isTerminal()) {
-            results.add(input.substring(0, offset + 1));
+            String prefix = input.substring(0, offset + 1);
+            if (!enforceWordBoundary || wordBoundary.matcher(input.substring(offset + 1)).find())
+                results.add(prefix);
         }
-        return matchingPrefixes(child, input, offset + 1, results);
+        return matchingPrefixes(child, input, offset + 1, enforceWordBoundary, results);
     }
 
     public boolean contains(final String word) {
