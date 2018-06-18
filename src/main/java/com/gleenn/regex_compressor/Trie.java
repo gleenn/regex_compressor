@@ -1,6 +1,7 @@
 package com.gleenn.regex_compressor;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public interface Trie {
     Trie addWord(String word);

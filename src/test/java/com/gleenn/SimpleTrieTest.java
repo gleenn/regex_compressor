@@ -1,13 +1,17 @@
 package com.gleenn;
 
 import com.gleenn.regex_compressor.Trie;
-import static com.gleenn.regex_compressor.SimpleTrie.hasNoChildren;
-import static com.gleenn.regex_compressor.SimpleTrie.hasOnlyChild;
 import com.gleenn.regex_compressor.SimpleTrie;
+
+import static com.gleenn.regex_compressor.SimpleTrie.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
 
 public class SimpleTrieTest {
     @Test
@@ -64,8 +68,9 @@ public class SimpleTrieTest {
     @Test
     public void get_returnsSubTrieMatchingCharacter() {
         Trie trie = new SimpleTrie();
-        trie.addWord("a");
+        assertThat(trie.addWord("a").isTerminal(), is(true));
         trie.addWord("bc");
+        assertThat(trie.get('a').isTerminal(), is(true));
         assertThat(trie.get('b').get('c').isTerminal(), is(true));
     }
 
@@ -108,5 +113,22 @@ public class SimpleTrieTest {
         assertThat(hasNoChildren(trie), is(true));
         trie.addWord("a");
         assertThat(hasNoChildren(trie), is(false));
+    }
+
+    @Test
+    public void matchingPrefixesTest() {
+        Trie trie = new SimpleTrie();
+
+        assertThat(matchingPrefixes(trie, ""), is(emptyList()));
+        assertThat(matchingPrefixes(trie, "asdf"), is(emptyList()));
+
+        trie.addWord("a");
+        assertThat(matchingPrefixes(trie, "a"), is(singletonList("a")));
+        assertThat(matchingPrefixes(trie, "b"), is(emptyList()));
+
+        trie.addWord("ab");
+        assertThat(matchingPrefixes(trie, "ab"), is(asList("a", "ab")));
+
+        assertThat(matchingPrefixes(trie, " ab"), is(emptyList()));
     }
 }

@@ -3,6 +3,7 @@ package com.gleenn.regex_compressor;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SimpleTrie implements Trie {
     final private Character character;
@@ -39,14 +40,14 @@ public class SimpleTrie implements Trie {
         this.terminal = terminal;
         this.children = new LinkedHashMap<>();
 
-        if(childrenCharacters == null) return;
-        for(Character child : childrenCharacters) {
+        if (childrenCharacters == null) return;
+        for (Character child : childrenCharacters) {
             this.children.put(child, new SimpleTrie(child, true));
         }
     }
 
     public SimpleTrie(Character character, boolean terminal, LinkedHashMap<Character, Trie> children) {
-        if(children == null) {
+        if (children == null) {
             throw new RuntimeException("Children cannot be null");
         }
         this.character = character;
@@ -60,14 +61,14 @@ public class SimpleTrie implements Trie {
 
     private static Trie addWord(Trie parent, String word) {
         int wordLength = word.length();
-        if(wordLength == 0) return parent;
+        if (wordLength == 0) return parent;
 
         char c = word.charAt(0);
         Trie insertionNode = parent.getChildren().get(c);
-        if(insertionNode == null) {
+        if (insertionNode == null) {
             insertionNode = new SimpleTrie(c, wordLength == 1);
             parent.getChildren().put(c, insertionNode);
-        } else if(wordLength == 1) {
+        } else if (wordLength == 1) {
             insertionNode.setTerminal(true);
             return insertionNode;
         }
@@ -80,23 +81,23 @@ public class SimpleTrie implements Trie {
 
     private Trie addReverseWord(final Trie parent, final String word) {
         int wordLength = word.length();
-        if(wordLength == 0) return parent;
+        if (wordLength == 0) return parent;
 
-        char c = word.charAt(wordLength-1);
+        char c = word.charAt(wordLength - 1);
         Trie insertionNode = parent.getChildren().get(c);
-        if(insertionNode == null) {
+        if (insertionNode == null) {
             insertionNode = new SimpleTrie(c, wordLength == 1);
             parent.getChildren().put(c, insertionNode);
-        } else if(wordLength == 1) {
+        } else if (wordLength == 1) {
             insertionNode.setTerminal(true);
             return insertionNode;
         }
-        return addReverseWord(insertionNode, word.substring(0, wordLength-1));
+        return addReverseWord(insertionNode, word.substring(0, wordLength - 1));
     }
 
     public static Trie buildPrefixTrie(List<String> strings) {
         Trie trie = new SimpleTrie();
-        for(String string : strings) {
+        for (String string : strings) {
             trie.addWord(string);
         }
         return trie;
@@ -104,7 +105,7 @@ public class SimpleTrie implements Trie {
 
     public static Trie buildSuffixTrie(List<String> strings) {
         Trie trie = new SimpleTrie();
-        for(String string : strings) {
+        for (String string : strings) {
             trie.addReverseWord(string);
         }
         return trie;
@@ -140,13 +141,13 @@ public class SimpleTrie implements Trie {
 
     @Override
     public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Trie node = (Trie) o;
 
-        if(terminal != node.isTerminal()) return false;
-        if(character != null ? !character.equals(node.getCharacter()) : node.getCharacter() != null) return false;
+        if (terminal != node.isTerminal()) return false;
+        if (character != null ? !character.equals(node.getCharacter()) : node.getCharacter() != null) return false;
         return children.equals(node.getChildren());
     }
 
@@ -158,13 +159,28 @@ public class SimpleTrie implements Trie {
         return result;
     }
 
+    public static List<String> matchingPrefixes(Trie trie, String input) {
+        return matchingPrefixes(trie, input, 0, new ArrayList<String>());
+    }
+
+    private static List<String> matchingPrefixes(Trie trie, String input, int offset, List<String> results) {
+        if (offset >= input.length()) return results;
+
+        Trie child = trie.get(input.charAt(offset));
+        if (child == null) return results;
+        if (child.isTerminal()) {
+            results.add(input.substring(0, offset + 1));
+        }
+        return matchingPrefixes(child, input, offset + 1, results);
+    }
+
     public boolean contains(final String word) {
         return contains(this, word);
     }
 
     private boolean contains(final Trie trie, final String word) {
         final Trie child;
-        switch(word.length()) {
+        switch (word.length()) {
             case 0:
                 return false;
             case 1:
