@@ -128,7 +128,9 @@ public class SimpleTrieTest {
 
         trie.addWord("ab");
         assertThat(matchingPrefixes(trie, "ab"), is(asList("a", "ab")));
-
         assertThat(matchingPrefixes(trie, " ab"), is(emptyList()));
+
+        trie.addWord("c");
+        assertThat(matchingPrefixes(trie, "cab"), is(singletonList("c")));
     }
 }
