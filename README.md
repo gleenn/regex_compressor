@@ -35,3 +35,7 @@ Insertion order matters, it can affect the result of matches if you care about m
 This project is based on a Clojure implementation called [Frak](https://github.com/noprompt/frak).
 
 Radis tree implemented in Java by [thegedge](https://github.com/thegedge/radix-tree).
+
+## Licence
+
+Eclipse Public License - v 1.0
