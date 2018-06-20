@@ -153,8 +153,8 @@ public class SimpleTrieTest {
 
         trie.addWord("c");
         assertThat(matchingPrefixes(trie, "c ab", true), is(singletonList("c")));
+        assertThat(matchingPrefixes(trie, "c ", true), is(singletonList("c")));
 
-        trie.addWord("c");
         assertThat(matchingPrefixes(trie, "ca b", true), is(emptyList()));
 
         assertThat(matchingPrefixes(trie, "ab\n", true), is(singletonList("ab")));
