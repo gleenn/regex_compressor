@@ -167,7 +167,7 @@ public class SimpleTrie implements Trie {
         return matchingPrefixes(trie, input, 0, enforceWordBoundary, new ArrayList<String>());
     }
 
-    public final static Pattern wordBoundary = Pattern.compile("\\A(?:\\W|\\Z)");
+    public final static Pattern wordBoundary = Pattern.compile("\\W");
 
     private static List<String> matchingPrefixes(Trie trie, String input, int offset, boolean enforceWordBoundary, List<String> results) {
         if (offset >= input.length()) return results;
@@ -176,7 +176,8 @@ public class SimpleTrie implements Trie {
         if (child == null) return results;
         if (child.isTerminal()) {
             String prefix = input.substring(0, offset + 1);
-            if (!enforceWordBoundary || wordBoundary.matcher(input.substring(offset + 1)).find())
+            String substring = input.substring(offset + 1);
+            if (!enforceWordBoundary || substring.equals("") || wordBoundary.matcher(substring).find())
                 results.add(prefix);
         }
         return matchingPrefixes(child, input, offset + 1, enforceWordBoundary, results);

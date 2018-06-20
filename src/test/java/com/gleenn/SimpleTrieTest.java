@@ -136,7 +136,6 @@ public class SimpleTrieTest {
 
     @Test
     public void matchingPrefixesTest_withEnforceWordBoundary() {
-        assertThat(SimpleTrie.wordBoundary.matcher("").find(), is(true));
         assertThat(SimpleTrie.wordBoundary.matcher(" ").find(), is(true));
 
         Trie trie = new SimpleTrie();
