@@ -11,8 +11,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-
 public class SimpleTrieTest {
     @Test
     public void addWordTest_setsTerminalPropertyCorrectly() {
