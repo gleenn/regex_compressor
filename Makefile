@@ -5,4 +5,6 @@ test:
 	mvn test
 
 deploy:
-	echo "um.... yeah"
+	echo "I hope you bumped the version number!"
+	git push
+	mvn test deploy -X
