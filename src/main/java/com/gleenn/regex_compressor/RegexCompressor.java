@@ -54,10 +54,18 @@ public final class RegexCompressor {
 
     public static void buildRegex(final Trie trie, final StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
+        
+        String path = ((SimpleTrie) trie).getPath();
         Character character = trie.getCharacter();
-        if(character != null) {
+        
+        if(path != null && path.length() > 1) {
+            for(char c : path.toCharArray()) {
+                result.append(escape(c));
+            }
+        } else if(character != null) {
             result.append(escape(character));
         }
+        
         LinkedHashMap<Character, Trie> childrenTries = trie.getChildren();
 
         if(childrenTries.isEmpty()) return;
@@ -67,7 +75,9 @@ public final class RegexCompressor {
         } else {
             boolean allOnlyChildren = true;
             for(Trie child : childrenTries.values()) {
-                allOnlyChildren &= hasNoChildren(child) && child.isTerminal();
+                String childPath = ((SimpleTrie) child).getPath();
+                allOnlyChildren &= hasNoChildren(child) && child.isTerminal() && 
+                                  (childPath == null || childPath.length() == 1);
             }
 
             if(allOnlyChildren) {
@@ -75,13 +85,13 @@ public final class RegexCompressor {
                 for(Trie child : childrenTries.values()) buildRegex(child, result);
                 result.append("]");
             } else {
-                if(character != null) result.append("(?:");
+                if(character != null || (path != null && path.length() > 0)) result.append("(?:");
                 for(Trie child : childrenTries.values()) {
                     buildRegex(child, result);
                     result.append("|");
                 }
                 result.deleteCharAt(result.length() - 1);
-                if(character != null) result.append(")");
+                if(character != null || (path != null && path.length() > 0)) result.append(")");
             }
         }
 
