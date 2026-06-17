@@ -14,6 +14,9 @@ public final class TrieSimplifier {
     }
 
     static Trie simplify(final Trie prefixNode, final Trie suffixNode) {
+        // Optimize both tries using patty trie technique
+        SimpleTrie.optimize(prefixNode);
+        SimpleTrie.optimize(suffixNode);
         return prefixNode;
     }
 

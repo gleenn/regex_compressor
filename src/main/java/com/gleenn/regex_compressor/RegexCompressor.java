@@ -32,6 +32,10 @@ public final class RegexCompressor {
         Trie trie = buildPrefixTrie(options.isCaseSensitive() ?
                 strings :
                 strings.stream().map(String::toLowerCase).collect(Collectors.toList()));
+        
+        // Optimize the trie to use patty trie structure
+        SimpleTrie.optimize(trie);
+        
         return buildRegex(trie, options);
     }
 
@@ -55,12 +59,17 @@ public final class RegexCompressor {
     public static void buildRegex(final Trie trie, final StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
         Character character = trie.getCharacter();
+        String string = trie.getString();
+        
         if(character != null) {
             result.append(escape(character));
+        } else if(string != null) {
+            result.append(escapeString(string));
         }
+        
         LinkedHashMap<Character, Trie> childrenTries = trie.getChildren();
 
-        if(childrenTries.isEmpty()) return;
+        if(childrenTries.isEmpty() && string == null) return;
 
         if(hasOnlyChild(trie) && (hasNoChildren(getOnlyChild(trie)) || !trie.isTerminal())) {
             for(Trie child : childrenTries.values()) buildRegex(child, result);
@@ -75,13 +84,13 @@ public final class RegexCompressor {
                 for(Trie child : childrenTries.values()) buildRegex(child, result);
                 result.append("]");
             } else {
-                if(character != null) result.append("(?:");
+                if(character != null || string != null) result.append("(?:");
                 for(Trie child : childrenTries.values()) {
                     buildRegex(child, result);
                     result.append("|");
                 }
                 result.deleteCharAt(result.length() - 1);
-                if(character != null) result.append(")");
+                if(character != null || string != null) result.append(")");
             }
         }
 
@@ -111,5 +120,13 @@ public final class RegexCompressor {
             case '|': return "\\|";
             default: return c + "";
         }
+    }
+    
+    public static String escapeString(String s) {
+        StringBuilder result = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            result.append(escape(c));
+        }
+        return result.toString();
     }
 }

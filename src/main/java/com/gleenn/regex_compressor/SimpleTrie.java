@@ -9,6 +9,7 @@ public class SimpleTrie implements Trie {
     final private Character character;
     private boolean terminal;
     final private LinkedHashMap<Character, Trie> children;
+    private String string; // For patty trie optimization
 
     public Character getCharacter() {
         return character;
@@ -25,6 +26,14 @@ public class SimpleTrie implements Trie {
     @Override
     public void setTerminal(boolean terminal) {
         this.terminal = terminal;
+    }
+
+    public String getString() {
+        return string;
+    }
+
+    public void setString(String string) {
+        this.string = string;
     }
 
     public SimpleTrie() {
@@ -53,6 +62,7 @@ public class SimpleTrie implements Trie {
         this.character = character;
         this.terminal = terminal;
         this.children = children;
+        this.string = null;
     }
 
     public Trie addWord(String word) {
@@ -148,6 +158,7 @@ public class SimpleTrie implements Trie {
 
         if (terminal != node.isTerminal()) return false;
         if (character != null ? !character.equals(node.getCharacter()) : node.getCharacter() != null) return false;
+        if (string != null ? !string.equals(node.getString()) : node.getString() != null) return false;
         return children.equals(node.getChildren());
     }
 
@@ -156,6 +167,7 @@ public class SimpleTrie implements Trie {
         int result = character != null ? character.hashCode() : 0;
         result = 31 * result + (terminal ? 1 : 0);
         result = 31 * result + children.hashCode();
+        result = 31 * result + (string != null ? string.hashCode() : 0);
         return result;
     }
 
@@ -197,6 +209,31 @@ public class SimpleTrie implements Trie {
             default:
                 child = trie.getChildren().get(word.charAt(0));
                 return child != null && contains(child, word.substring(1));
+        }
+    }
+    
+    // Patty trie optimization methods
+    public static void optimize(Trie trie) {
+        if (trie == null) return;
+        
+        // Recursively optimize children
+        for (Trie child : trie.getChildren().values()) {
+            optimize(child);
+        }
+        
+        // Check if we can compress this node
+        if (trie.getChildren().size() == 1) {
+            Trie child = trie.getChildren().values().iterator().next();
+            if (child != null && !child.isTerminal() && child.getChildren().size() == 1) {
+                // We can compress: merge the child's string with this node's character
+                String newString = (trie.getCharacter() != null ? trie.getCharacter().toString() : "") + 
+                                   (child.getString() != null ? child.getString() : 
+                                    (child.getCharacter() != null ? child.getCharacter().toString() : ""));
+                trie.setString(newString);
+                trie.setTerminal(false);
+                trie.getChildren().clear();
+                trie.getChildren().putAll(child.getChildren());
+            }
         }
     }
 }

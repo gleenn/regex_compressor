@@ -12,4 +12,6 @@ public interface Trie {
     void setTerminal(boolean terminal);
     boolean contains(String word);
     Trie get(Character c);
+    String getString();
+    void setString(String string);
 }
