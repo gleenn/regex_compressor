@@ -221,7 +221,7 @@ public class SimpleTrie implements Trie {
             optimize(child);
         }
         
-        // Check if we can compress this node
+        // Check if we can compress this node - only if it has exactly one child
         if (trie.getChildren().size() == 1) {
             Trie child = trie.getChildren().values().iterator().next();
             if (child != null && !child.isTerminal() && child.getChildren().size() == 1) {

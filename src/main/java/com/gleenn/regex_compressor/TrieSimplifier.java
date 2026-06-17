@@ -21,6 +21,7 @@ public final class TrieSimplifier {
     }
 
     static void combine(final Trie prefixNode, final Trie suffixNode) {
-
+        // This method would combine prefix and suffix tries if needed
+        // For now, we just return the prefix trie as it's the main one
     }
 }
