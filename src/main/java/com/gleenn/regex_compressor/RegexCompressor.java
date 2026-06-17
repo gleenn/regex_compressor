@@ -97,7 +97,9 @@ public final class RegexCompressor {
 
             if(allOnlyChildren) {
                 result.append("[");
-                for(Trie child : childrenTries.values()) buildRegex(child, result);
+                for(Trie child : childrenTries.values()) {
+                    buildRegex(child, result);
+                }
                 result.append("]");
             } else {
                 if(character != null) result.append("(?:");
@@ -109,9 +111,6 @@ public final class RegexCompressor {
                 if(character != null) result.append(")");
             }
         }
-
-        // Add terminal marker if needed
-        if(trie.isTerminal()) result.append("?");
     }
 
     public static String escape(char c) {
