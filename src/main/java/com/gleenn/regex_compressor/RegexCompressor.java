@@ -58,20 +58,36 @@ public final class RegexCompressor {
 
     public static void buildRegex(final Trie trie, final StringBuilder result) {
         if(trie == null) throw new RuntimeException("Trie cannot be null");
+        
+        // Handle the case where this node has a string value (patty trie optimization)
+        if (trie.getString() != null) {
+            result.append(escapeString(trie.getString()));
+            // If this is a terminal node, add the optional marker
+            if (trie.isTerminal()) {
+                result.append("?");
+            }
+            return;
+        }
+        
         Character character = trie.getCharacter();
-        String string = trie.getString();
         
         if(character != null) {
             result.append(escape(character));
-        } else if(string != null) {
-            result.append(escapeString(string));
         }
         
         LinkedHashMap<Character, Trie> childrenTries = trie.getChildren();
 
-        if(childrenTries.isEmpty() && string == null) return;
+        if(childrenTries.isEmpty()) {
+            // If this is a terminal node, add the optional marker
+            if (trie.isTerminal()) {
+                result.append("?");
+            }
+            return;
+        }
 
+        // Check if we can use the patty trie optimization for children
         if(hasOnlyChild(trie) && (hasNoChildren(getOnlyChild(trie)) || !trie.isTerminal())) {
+            // This is a chain of single children - continue recursively
             for(Trie child : childrenTries.values()) buildRegex(child, result);
         } else {
             boolean allOnlyChildren = true;
@@ -84,16 +100,17 @@ public final class RegexCompressor {
                 for(Trie child : childrenTries.values()) buildRegex(child, result);
                 result.append("]");
             } else {
-                if(character != null || string != null) result.append("(?:");
+                if(character != null) result.append("(?:");
                 for(Trie child : childrenTries.values()) {
                     buildRegex(child, result);
                     result.append("|");
                 }
                 result.deleteCharAt(result.length() - 1);
-                if(character != null || string != null) result.append(")");
+                if(character != null) result.append(")");
             }
         }
 
+        // Add terminal marker if needed
         if(trie.isTerminal()) result.append("?");
     }
 

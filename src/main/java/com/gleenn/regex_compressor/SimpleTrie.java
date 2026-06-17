@@ -216,7 +216,7 @@ public class SimpleTrie implements Trie {
     public static void optimize(Trie trie) {
         if (trie == null) return;
         
-        // Recursively optimize children
+        // Recursively optimize children first
         for (Trie child : trie.getChildren().values()) {
             optimize(child);
         }
@@ -225,7 +225,7 @@ public class SimpleTrie implements Trie {
         if (trie.getChildren().size() == 1) {
             Trie child = trie.getChildren().values().iterator().next();
             if (child != null && !child.isTerminal() && child.getChildren().size() == 1) {
-                // We can compress: merge the child's string with this node's character
+                // We can compress: merge the child's character/string with this node's character
                 String newString = (trie.getCharacter() != null ? trie.getCharacter().toString() : "") + 
                                    (child.getString() != null ? child.getString() : 
                                     (child.getCharacter() != null ? child.getCharacter().toString() : ""));
